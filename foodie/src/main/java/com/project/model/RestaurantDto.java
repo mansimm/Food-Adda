@@ -1,5 +1,7 @@
 package com.project.model;
 
+import java.util.List;
+
 public class RestaurantDto {
 	
 	private Integer restaurantId;
@@ -13,6 +15,43 @@ public class RestaurantDto {
 	private Integer pincode;
 	private String approvalStatus;
 	
+	private double avgRating;
+	private List<DishDto> dishes;
+	private List<String> photoUrls;
+	private RestaurantTransactionDto transaction;
+	
+	public double getAvgRating() {
+		return avgRating;
+	}
+
+	public void setAvgRating(double avgRating) {
+		this.avgRating = avgRating;
+	}
+
+	public List<DishDto> getDishes() {
+		return dishes;
+	}
+
+	public void setDishes(List<DishDto> dishes) {
+		this.dishes = dishes;
+	}
+
+	public List<String> getPhotoUrls() {
+		return photoUrls;
+	}
+
+	public void setPhotoUrls(List<String> photoUrls) {
+		this.photoUrls = photoUrls;
+	}
+
+	public RestaurantTransactionDto getTransaction() {
+		return transaction;
+	}
+
+	public void setTransaction(RestaurantTransactionDto transaction) {
+		this.transaction = transaction;
+	}
+
 	public RestaurantDto(Integer restaurantId, String restaurantName, String restaurantContact, String restaurantType,
 			String addressLine1, String area, String city, String resState, Integer pincode, String approvalStatus) {
 		super();

@@ -1,10 +1,17 @@
 package com.project.entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
 
 @Entity
 @Table(name="restaurant")
@@ -23,6 +30,39 @@ public class Restaurant {
 	private Integer pincode;
 	private String approvalStatus;
 	
+	private Double avgRating;
+	private String photoUrls;
+	@OneToMany(cascade= CascadeType.ALL)
+	@JoinColumn(name = "restaurant_id")
+	private List<Dish> dishes;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "restaurant_id", unique = true)
+	private RestaurantTransaction transaction;
+	
+	public Double getAvgRating() {
+		return avgRating;
+	}
+	public void setAvgRating(Double avgRating) {
+		this.avgRating = avgRating;
+	}
+	public String getPhotoUrls() {
+		return photoUrls;
+	}
+	public void setPhotoUrls(String photoUrls) {
+		this.photoUrls = photoUrls;
+	}
+	public List<Dish> getDishes() {
+		return dishes;
+	}
+	public void setDishes(List<Dish> dishes) {
+		this.dishes = dishes;
+	}
+	public RestaurantTransaction getTransaction() {
+		return transaction;
+	}
+	public void setTransaction(RestaurantTransaction transaction) {
+		this.transaction = transaction;
+	}
 	public Integer getRestaurantId() {
 		return restaurantId;
 	}
