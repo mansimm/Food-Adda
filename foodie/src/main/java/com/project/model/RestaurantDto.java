@@ -1,17 +1,7 @@
-package com.project.entity;
+package com.project.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table(name="restaurant")
-public class Restaurant {
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+public class RestaurantDto {
+	
 	private Integer restaurantId;
 	private String restaurantName;
 	private String restaurantContact;
@@ -22,6 +12,21 @@ public class Restaurant {
 	private String resState;
 	private Integer pincode;
 	private String approvalStatus;
+	
+	public RestaurantDto(Integer restaurantId, String restaurantName, String restaurantContact, String restaurantType,
+			String addressLine1, String area, String city, String resState, Integer pincode, String approvalStatus) {
+		super();
+		this.restaurantId = restaurantId;
+		this.restaurantName = restaurantName;
+		this.restaurantContact = restaurantContact;
+		this.restaurantType = restaurantType;
+		this.addressLine1 = addressLine1;
+		this.area = area;
+		this.city = city;
+		this.resState = resState;
+		this.pincode = pincode;
+		this.approvalStatus = approvalStatus;
+	}
 	
 	public Integer getRestaurantId() {
 		return restaurantId;
