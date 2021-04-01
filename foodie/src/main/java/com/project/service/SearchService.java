@@ -6,5 +6,5 @@ import com.project.model.RestaurantDto;
 
 public interface SearchService {
 
-	public List<RestaurantDto> getAllRestaurant();
+	public List<RestaurantDto> getAllRestaurant() throws Exception;
 }

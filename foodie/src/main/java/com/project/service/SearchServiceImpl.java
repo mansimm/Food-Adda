@@ -1,6 +1,7 @@
 package com.project.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project.entity.Restaurant;
+import com.project.exception.RestaurantNotFoundException;
 import com.project.model.RestaurantDto;
 import com.project.model.RestaurantTransactionDto;
 import com.project.repository.SearchRepo;
@@ -20,7 +22,7 @@ public class SearchServiceImpl implements SearchService {
 	SearchRepo searchRepo;
 	
 	@Override
-	public List<RestaurantDto> getAllRestaurant() {
+	public List<RestaurantDto> getAllRestaurant() throws Exception{
 		
 		Iterable<Restaurant> restaurant = searchRepo.findAll();
 		List<RestaurantDto> res = new ArrayList<RestaurantDto>();
@@ -29,9 +31,9 @@ public class SearchServiceImpl implements SearchService {
 					x.getRestaurantType(),x.getAddressLine1(),x.getArea(),x.getCity(),x.getResState(),x.getPincode(),x.getApprovalStatus());
 			
 			rt.setAvgRating(x.getAvgRating());
-			List<String> url = new ArrayList<String>();
-			url.add(x.getPhotoUrls());
-			rt.setPhotoUrls(url);
+			
+			String[] photos=x.getPhotoUrls().split("-");
+			rt.setPhotoUrls(Arrays.asList(photos));
 			
 			List<DishDto> dishes = x.getDishes().stream().map(y->new DishDto(y.getDishId(),
 					 y.getDishName(), 
@@ -48,7 +50,12 @@ public class SearchServiceImpl implements SearchService {
 			rt.setTransaction(trans);
 			res.add(rt);
 		});
-		System.out.println(res);
+		//System.out.println(res);
+		
+		if(res.isEmpty())
+		{
+			throw new RestaurantNotFoundException("SearchService.NO_RESTAURANTS_FOUND");
+		}
 		return res;
 	}
 
