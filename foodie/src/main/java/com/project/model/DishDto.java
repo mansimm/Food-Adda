@@ -12,6 +12,7 @@ public class DishDto {
 	private String speciality;
 	private String imageUrl;
 
+	public DishDto() {}
 	
 	
 	public DishDto(Integer dishId, String dishName, String dishCuisine, String dishType, String dishDescription,

@@ -20,6 +20,27 @@ public class RestaurantDto {
 	private List<String> photoUrls;
 	private RestaurantTransactionDto transaction;
 	
+	public RestaurantDto()
+	{
+		
+	}
+	
+	
+	public RestaurantDto(Integer restaurantId, String restaurantName, String restaurantContact, String restaurantType,
+			String addressLine1, String area, String city, String resState, Integer pincode, String approvalStatus) {
+		super();
+		this.restaurantId = restaurantId;
+		this.restaurantName = restaurantName;
+		this.restaurantContact = restaurantContact;
+		this.restaurantType = restaurantType;
+		this.addressLine1 = addressLine1;
+		this.area = area;
+		this.city = city;
+		this.resState = resState;
+		this.pincode = pincode;
+		this.approvalStatus = approvalStatus;
+	}
+	
 	public double getAvgRating() {
 		return avgRating;
 	}
@@ -52,20 +73,7 @@ public class RestaurantDto {
 		this.transaction = transaction;
 	}
 
-	public RestaurantDto(Integer restaurantId, String restaurantName, String restaurantContact, String restaurantType,
-			String addressLine1, String area, String city, String resState, Integer pincode, String approvalStatus) {
-		super();
-		this.restaurantId = restaurantId;
-		this.restaurantName = restaurantName;
-		this.restaurantContact = restaurantContact;
-		this.restaurantType = restaurantType;
-		this.addressLine1 = addressLine1;
-		this.area = area;
-		this.city = city;
-		this.resState = resState;
-		this.pincode = pincode;
-		this.approvalStatus = approvalStatus;
-	}
+	
 	
 	public Integer getRestaurantId() {
 		return restaurantId;

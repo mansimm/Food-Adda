@@ -7,6 +7,10 @@ public class RestaurantTransactionDto {
 	private Boolean restaurantStatus;
 	
 	
+	public RestaurantTransactionDto()
+	{
+		
+	}
 	public RestaurantTransactionDto(Integer restaurantTransactionId, Integer restaurantOrderCounter,
 			Integer restaurantApproxCost, Boolean restaurantStatus) {
 		super();
