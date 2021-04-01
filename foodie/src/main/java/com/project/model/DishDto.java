@@ -14,6 +14,19 @@ public class DishDto {
 
 	
 	
+	public DishDto(Integer dishId, String dishName, String dishCuisine, String dishType, String dishDescription,
+			Double price, Double avgRating, String speciality, String imageUrl) {
+		super();
+		this.dishId = dishId;
+		this.dishName = dishName;
+		this.dishCuisine = dishCuisine;
+		this.dishType = dishType;
+		this.dishDescription = dishDescription;
+		this.price = price;
+		this.avgRating = avgRating;
+		this.speciality = speciality;
+		this.imageUrl = imageUrl;
+	}
 	public Integer getDishId() {
 		return dishId;
 	}

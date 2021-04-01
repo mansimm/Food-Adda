@@ -6,6 +6,16 @@ public class RestaurantTransactionDto {
 	private Integer restaurantApproxCost;
 	private Boolean restaurantStatus;
 	
+	
+	public RestaurantTransactionDto(Integer restaurantTransactionId, Integer restaurantOrderCounter,
+			Integer restaurantApproxCost, Boolean restaurantStatus) {
+		super();
+		this.restaurantTransactionId = restaurantTransactionId;
+		this.restaurantOrderCounter = restaurantOrderCounter;
+		this.restaurantApproxCost = restaurantApproxCost;
+		this.restaurantStatus = restaurantStatus;
+	}
+	
 	public Integer getRestaurantTransactionId() {
 		return restaurantTransactionId;
 	}
