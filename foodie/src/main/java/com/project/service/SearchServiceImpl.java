@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import com.project.repository.SearchRepo;
 import com.project.model.DishDto;
 
 @Service
+@Transactional
 public class SearchServiceImpl implements SearchService {
 
 	@Autowired

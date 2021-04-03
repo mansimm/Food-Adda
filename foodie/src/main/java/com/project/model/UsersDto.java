@@ -2,6 +2,7 @@ package com.project.model;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -25,15 +26,16 @@ public class UsersDto {
 	private String emailId;
 	
 	@NotNull(message="{UserValidator.INVALID_PASSWORD_NULL}")
-	@Min(value=7,message="{UserValidator.INVALID_PASSWORD_FORMAT}")
-	@Max(value=20,message="{UserValidator.INVALID_PASSWORD_FORMAT}")
-	//@Pattern(regexp="[A-Z]&&[a-z]&&[0-9]&&[!@#$%^&*]",message="{UserValidator.INVALID_PASSWORD_FORMAT}")
+	@Pattern(regexp="(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{7,20}",message="{UserValidator.INVALID_PASSWORD_FORMAT}")
 	private String password;
 	
 	@NotNull(message="{UserValidator.INVALID_ROLE_TYPE_NULL}")
+	@Valid
 	private List<RolesDto> roles;
 	
 	private List<RestaurantDto> restaurants;
+	
+	@Valid
 	private List<UserAddressDto> addressList;
 	private WalletDto wallet;
 	private List<UserLikesDto> userLikesList;

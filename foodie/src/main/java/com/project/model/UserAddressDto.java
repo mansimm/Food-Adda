@@ -1,14 +1,33 @@
 package com.project.model;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+
 public class UserAddressDto {
+	
 	private Integer userAddressId;
+	
+	@NotEmpty(message="{UserValidator.INVALID_ADDRESS_NAME}")
 	private String userAddressName;
+	
+	@Pattern(regexp="[A-Za-z0-9]+",message="UserValidator.INVALID_ADDRESS_LINE1")
 	private String addressLine1;
+	
+	@Pattern(regexp="[A-Za-z0-9]+",message="UserValidator.INVALID_ADDRESS_LINE2")
 	private String addressLine2;
+	
+	@Pattern(regexp="[A-Za-z]+",message="UserValidator.INVALID_ADDRESS_AREA")
 	private String area;
+	
+	@Pattern(regexp="[A-Za-z]+",message="UserValidator.INVALID_ADDRESS_CITY")
 	private String city;
+	
+	@Pattern(regexp="[A-Za-z]+",message="UserValidator.INVALID_ADDRESS_STATE")
 	private String userState;
+	
+	@Pattern(regexp="[0-9]{6}",message="UserValidator.INVALID_ADDRESS_PINCODE")
 	private String pincode;
+	
 	public Integer getUserAddressId() {
 		return userAddressId;
 	}

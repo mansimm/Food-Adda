@@ -1,9 +1,14 @@
 package com.project.model;
 
+import javax.validation.constraints.Pattern;
 
 public class RolesDto {
+	
 	private Integer roleId;
+	
+	//@Pattern(regexp="(CUSTOMER|VENDOR)",message="{UserValidator.INVALID_ROLE_TYPE}")
 	private Role roleType;
+	
 	public Integer getRoleId() {
 		return roleId;
 	}

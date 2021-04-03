@@ -9,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+
 
 @Entity
 public class Users {
@@ -21,10 +24,63 @@ public class Users {
 	private String contactNumber;
 	private String password;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id")
-	private List<Roles> roles;
 	
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "USER_ID")
+	private List<Roles> roles;
+	@OneToMany(cascade= CascadeType.ALL)
+	@JoinColumn(name = "USER_ID")
+	private List<Restaurant> restaurants;
+	@OneToMany(cascade= CascadeType.ALL)
+	@JoinColumn(name = "user_id")
+	private List<UserAddress> addressList;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id", unique = true)
+	private Wallet wallet;
+	@OneToMany(cascade= CascadeType.ALL)
+	@JoinColumn(name = "USER_ID")
+	private List<UserLikes> userLikesList;
+	@OneToMany(cascade= CascadeType.ALL)
+	@JoinColumn(name = "user_id")
+	private List<Orders> ordersList;
+	
+	public List<Roles> getRoles() {
+		return roles;
+	}
+	public void setRoles(List<Roles> roles) {
+		this.roles = roles;
+	}
+	public List<Restaurant> getRestaurants() {
+		return restaurants;
+	}
+	public void setRestaurants(List<Restaurant> restaurants) {
+		this.restaurants = restaurants;
+	}
+	public List<UserAddress> getAddressList() {
+		return addressList;
+	}
+	public void setAddressList(List<UserAddress> addressList) {
+		this.addressList = addressList;
+	}
+	public Wallet getWallet() {
+		return wallet;
+	}
+	public void setWallet(Wallet wallet) {
+		this.wallet = wallet;
+	}
+	public List<UserLikes> getUserLikesList() {
+		return userLikesList;
+	}
+	public void setUserLikesList(List<UserLikes> userLikesList) {
+		this.userLikesList = userLikesList;
+	}
+	public List<Orders> getOrdersList() {
+		return ordersList;
+	}
+	public void setOrdersList(List<Orders> ordersList) {
+		this.ordersList = ordersList;
+	}
 	public Integer getUserId() {
 		return userId;
 	}

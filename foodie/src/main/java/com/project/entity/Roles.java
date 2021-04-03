@@ -19,7 +19,7 @@ public class Roles {
 	private Integer roleId;
 	
 	@Enumerated(EnumType.STRING)
-	private Role role;
+	private Role roleType;
 
 	public Integer getRoleId() {
 		return roleId;
@@ -29,12 +29,12 @@ public class Roles {
 		this.roleId = roleId;
 	}
 
-	public Role getRole() {
-		return role;
+	public Role getRoleType() {
+		return roleType;
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
+	public void setRoleType(Role roleType) {
+		this.roleType = roleType;
 	}
 	
 	
