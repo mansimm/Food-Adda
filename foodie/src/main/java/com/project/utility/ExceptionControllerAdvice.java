@@ -1,5 +1,6 @@
 package com.project.utility;
 
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
@@ -63,4 +64,5 @@ public class ExceptionControllerAdvice {
 		errorInfo.setTimestamp(LocalDateTime.now());
 		return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
 	}
+	
 }

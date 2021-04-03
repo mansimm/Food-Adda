@@ -1,5 +1,7 @@
 package com.project.api;
 
+import java.security.NoSuchAlgorithmException;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,7 @@ public class UserApi {
 	UserServiceImpl userService;
 	
 	@PostMapping(value="/register")
-	public ResponseEntity<String> registerUser(@Valid @RequestBody UsersDto user) throws UserServiceException
+	public ResponseEntity<String> registerUser(@Valid @RequestBody UsersDto user) throws UserServiceException, NoSuchAlgorithmException
 	{
 		String success = userService.registerUser(user);
 		System.out.println(success);

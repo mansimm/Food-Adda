@@ -1,5 +1,6 @@
 package com.project.service;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import com.project.exception.UserServiceException;
 import com.project.model.Role;
 import com.project.model.UsersDto;
 import com.project.repository.UserRepo;
+import com.project.utility.HashingUtility;
 
 @Service
 @Transactional
@@ -28,8 +30,10 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	Environment environment;
 	
+	HashingUtility hashingUtility = new HashingUtility();
+	
 	@Override
-	public String registerUser(UsersDto user) throws UserServiceException {
+	public String registerUser(UsersDto user) throws UserServiceException, NoSuchAlgorithmException {
 		Optional<Users> op = userRepo.findByContactNumber(user.getContactNumber());
 		if(op.isPresent())
 		{
@@ -81,7 +85,7 @@ public class UserServiceImpl implements UserService{
 			newUser.setUserName(user.getUserName());
 			newUser.setEmailId(user.getEmailId());
 			newUser.setContactNumber(user.getContactNumber());
-			newUser.setPassword(user.getPassword());
+			newUser.setPassword(hashingUtility.getHashValue(user.getPassword()));
 			
 			if(user.getRoles() != null)
 			{
