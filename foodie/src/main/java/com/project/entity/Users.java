@@ -29,18 +29,23 @@ public class Users {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "USER_ID")
 	private List<Roles> roles;
+	
 	@OneToMany(cascade= CascadeType.ALL)
 	@JoinColumn(name = "USER_ID")
 	private List<Restaurant> restaurants;
+	
 	@OneToMany(cascade= CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	private List<UserAddress> addressList;
+	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id", unique = true)
 	private Wallet wallet;
+	
 	@OneToMany(cascade= CascadeType.ALL)
 	@JoinColumn(name = "USER_ID")
 	private List<UserLikes> userLikesList;
+	
 	@OneToMany(cascade= CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	private List<Orders> ordersList;

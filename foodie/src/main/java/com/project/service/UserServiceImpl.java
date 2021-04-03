@@ -10,12 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import com.project.entity.Restaurant;
 import com.project.entity.Roles;
 import com.project.entity.UserAddress;
 import com.project.entity.Users;
 import com.project.exception.UserServiceException;
-import com.project.model.RolesDto;
+import com.project.model.Role;
 import com.project.model.UsersDto;
 import com.project.repository.UserRepo;
 
@@ -41,19 +40,22 @@ public class UserServiceImpl implements UserService{
 				if(user.getRoles().get(0).getRoleType().equals(role.getRoleType()))
 				{
 					throw new UserServiceException("UserService.USER_ALREADY_EXISTS");
-				}
-				//add role into already present customer
-				if(user.getRoles()!=null)
+				}				
+			}
+			//add new role into already present customer
+			if(user.getRoles()!=null)
+			{
+				Roles r = new Roles();
+				r.setRoleType(user.getRoles().get(0).getRoleType());
+				userPresent.getRoles().add(r);
+			}
+			if(user.getRoles().get(0).getRoleType().equals(Role.CUSTOMER))
+			{
+				//redirect to add address
+				UserAddress address = new UserAddress();
+				if(user.getAddressList()!=null)
 				{
-					Roles r = new Roles();
-					r.setRoleType(user.getRoles().get(0).getRoleType());
-					userPresent.getRoles().add(r);
-				}
-				
-				if(user.getRoles().get(0).getRoleType().equals("CUSTOMER"))
-				{
-					//redirect to add address
-					UserAddress address = new UserAddress();
+					System.out.println(user.getAddressList().get(0).getAddressLine1());
 					address.setAddressLine1(user.getAddressList().get(0).getAddressLine1());
 					address.setAddressLine2(user.getAddressList().get(0).getAddressLine2());
 					address.setArea(user.getAddressList().get(0).getArea());
@@ -62,14 +64,14 @@ public class UserServiceImpl implements UserService{
 					address.setUserAddressName(user.getAddressList().get(0).getUserAddressName());
 					address.setUserState(user.getAddressList().get(0).getUserState());
 					
-					userPresent.getAddressList().add(address);
-
-				}
-				else if(user.getRoles().get(0).getRoleType().equals("VENDOR"))
-				{
-					//can register directly
 				}
 				
+				userPresent.getAddressList().add(address);
+
+			}
+			else if(user.getRoles().get(0).getRoleType().equals(Role.VENDOR))
+			{
+				//can register directly
 			}
 		}
 		else
@@ -88,6 +90,32 @@ public class UserServiceImpl implements UserService{
 				List<Roles> roles = new ArrayList<Roles>();
 				roles.add(role);
 				newUser.setRoles(roles);
+			}
+
+			if(user.getRoles().get(0).getRoleType().equals(Role.CUSTOMER))
+			{
+
+				//redirect to add address
+				UserAddress address = new UserAddress();
+				if(user.getAddressList()!=null)
+				{
+					address.setAddressLine1(user.getAddressList().get(0).getAddressLine1());
+					address.setAddressLine2(user.getAddressList().get(0).getAddressLine2());
+					address.setArea(user.getAddressList().get(0).getArea());
+					address.setCity(user.getAddressList().get(0).getCity());
+					address.setPincode(user.getAddressList().get(0).getPincode());
+					address.setUserAddressName(user.getAddressList().get(0).getUserAddressName());
+					address.setUserState(user.getAddressList().get(0).getUserState());
+					
+				}
+				List<UserAddress> newadd = new ArrayList<UserAddress>();
+				newadd.add(address);
+				newUser.setAddressList(newadd);
+
+			}
+			else if(user.getRoles().get(0).getRoleType().equals(Role.VENDOR))
+			{
+				//can register directly
 			}
 			userRepo.save(newUser);
 		}
