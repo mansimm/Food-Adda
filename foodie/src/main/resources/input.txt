@@ -1,0 +1,24 @@
+#input for register user - valid
+
+{
+    "userName":"Jackey chain six",
+    "emailId":"Jack@gmail.com",
+    "contactNumber":"9234567898",
+    "password":"Jack@22",
+    "roles" : [
+        {
+            "roleType":"CUSTOMER"
+        }
+    ],
+    "addressList":[
+        {
+            "userAddressName":"myaddress",
+            "addressLine1":"addressLine1",
+            "addressLine2":"addressLine2",
+            "area":"TimesSquare",
+            "city":"Seatle",
+            "userState":"California",
+            "pincode":"123128"
+        }
+    ]
+}
