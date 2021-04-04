@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.project.exception.RestaurantNotFoundException;
 import com.project.model.RestaurantDto;
 import com.project.model.UsersDto;
 import com.project.service.SearchServiceImpl;
@@ -32,17 +33,11 @@ public class SearchApi {
 	Environment environment;
 	
 	@GetMapping(value="/getAllRestaurants")
-	public ResponseEntity<List<RestaurantDto>> getAllRestaurants()
+	public ResponseEntity<List<RestaurantDto>> getAllRestaurants() throws RestaurantNotFoundException
 	{
-		try
-		{
-			List<RestaurantDto> res = search.getAllRestaurant();
-			return new ResponseEntity<List<RestaurantDto>>(res,HttpStatus.OK);
-		}
-		catch(Exception e){
-
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, environment.getProperty(e.getMessage()));
-		}
+		List<RestaurantDto> res = search.getAllRestaurant();
+		return new ResponseEntity<List<RestaurantDto>>(res,HttpStatus.OK);
+		
 	}
 	
 	

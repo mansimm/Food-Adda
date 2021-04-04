@@ -10,13 +10,13 @@ public class UserAddressDto {
 	@NotEmpty(message="{UserValidator.INVALID_ADDRESS_NAME}")
 	private String userAddressName;
 	
-	@Pattern(regexp="[A-Za-z0-9]+",message="UserValidator.INVALID_ADDRESS_LINE1")
+	@Pattern(regexp="[A-Za-z0-9 ]+",message="UserValidator.INVALID_ADDRESS_LINE1")
 	private String addressLine1;
 	
-	@Pattern(regexp="[A-Za-z0-9]+",message="UserValidator.INVALID_ADDRESS_LINE2")
+	@Pattern(regexp="[A-Za-z0-9 ]+",message="UserValidator.INVALID_ADDRESS_LINE2")
 	private String addressLine2;
 	
-	@Pattern(regexp="[A-Za-z]+",message="UserValidator.INVALID_ADDRESS_AREA")
+	@Pattern(regexp="[A-Za-z ]+",message="UserValidator.INVALID_ADDRESS_AREA")
 	private String area;
 	
 	@Pattern(regexp="[A-Za-z]+",message="UserValidator.INVALID_ADDRESS_CITY")

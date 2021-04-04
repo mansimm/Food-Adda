@@ -25,7 +25,7 @@ public class SearchServiceImpl implements SearchService {
 	SearchRepo searchRepo;
 	
 	@Override
-	public List<RestaurantDto> getAllRestaurant() throws Exception{
+	public List<RestaurantDto> getAllRestaurant() throws RestaurantNotFoundException{
 		
 		Iterable<Restaurant> restaurant = searchRepo.findAll();
 		List<RestaurantDto> res = new ArrayList<RestaurantDto>();

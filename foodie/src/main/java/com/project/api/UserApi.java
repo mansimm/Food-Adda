@@ -36,16 +36,6 @@ public class UserApi {
 		String success = userService.registerUser(user);
 		System.out.println(success);
 		return new ResponseEntity<String>(success,HttpStatus.OK);
-		
-//		try
-//		{
-//			String success = userService.registerUser(user);
-//			return new ResponseEntity<String>(success,HttpStatus.OK);
-//		}
-//		catch(Exception e)
-//		{
-//			throw new ResponseStatusException(HttpStatus.NOT_FOUND, environment.getProperty(e.getMessage()));
-//		}
 	}
 	
 }

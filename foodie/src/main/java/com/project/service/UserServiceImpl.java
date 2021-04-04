@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import com.project.entity.Roles;
 import com.project.entity.UserAddress;
 import com.project.entity.Users;
+import com.project.exception.InvalidCredentialsException;
 import com.project.exception.UserServiceException;
+import com.project.model.LoginCredentialsDto;
 import com.project.model.Role;
 import com.project.model.UsersDto;
 import com.project.repository.UserRepo;
@@ -132,6 +134,27 @@ public class UserServiceImpl implements UserService{
 			userRepo.save(newUser);
 		}
 		return environment.getProperty("UserService.USER_REGISTER_SUCCESS");
+	}
+	
+	public String userLogin(LoginCredentialsDto login) throws InvalidCredentialsException, NoSuchAlgorithmException
+	{
+		Optional<Users> op = userRepo.findByContactNumber(login.getContactNumber());
+		if(op.isPresent())
+		{
+			Users user = op.get();
+			if(user.getPassword().equals(hashingUtility.getHashValue(login.getPassword())))
+			{
+				return environment.getProperty("UserService.USER_LOGIN_SUCCESS");
+			}
+			else
+			{
+				throw new InvalidCredentialsException("UserService.INVALID_CREDENTIALS");
+			}
+		}
+		else
+		{
+			throw new InvalidCredentialsException("UserService.INVALID_CREDENTIALS");
+		}
 	}
 
 }
