@@ -1,12 +1,13 @@
 package com.project.model;
 
-import javax.validation.constraints.Pattern;
+
+import com.project.validator.RoleTypeSubset;
 
 public class RolesDto {
 	
 	private Integer roleId;
-	
-	//@Pattern(regexp="(CUSTOMER|VENDOR)",message="{UserValidator.INVALID_ROLE_TYPE}")
+	//Custom validator for enum Role
+	@RoleTypeSubset(anyOf = {Role.CUSTOMER, Role.VENDOR})
 	private Role roleType;
 	
 	public Integer getRoleId() {
