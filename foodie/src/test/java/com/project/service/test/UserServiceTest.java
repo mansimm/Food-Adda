@@ -104,7 +104,41 @@ public class UserServiceTest {
 
 		rolesEntity.add(roleEntity);
 		userEntity.setRoles(rolesEntity);
+		//Mocking repository method
 		Mockito.when(userRepo.findByContactNumber(user.getContactNumber())).thenReturn(Optional.ofNullable(userEntity));
+		
+		String success = userService.registerUser(user);
+		Assertions.assertEquals(environment.getProperty("UserService.USER_REGISTER_SUCCESS"), success);
+
+	}
+	
+	@Test
+	public void registerUserNewUserValidTest() throws NoSuchAlgorithmException, UserServiceException {
+		// to pass argument to register user method
+		UsersDto user = new UsersDto();
+		user.setContactNumber("9876543210");
+		user.setEmailId("mansi@gmail.com");
+		user.setUserName("mansi");
+		user.setPassword("Mansi@13");
+		List<RolesDto> roles = new ArrayList<RolesDto>();
+		RolesDto role = new RolesDto();
+		role.setRoleType(Role.CUSTOMER);
+		roles.add(role);
+		user.setRoles(roles);
+		List<UserAddressDto> addressList = new ArrayList<UserAddressDto>();
+		UserAddressDto add = new UserAddressDto();
+		add.setAddressLine1("addline1");
+		add.setAddressLine2("addline2");
+		add.setArea("Noida");
+		add.setCity("Bombay");
+		add.setPincode("987657");
+		add.setUserAddressName("myaddress");
+		add.setUserState("maharashtra");
+		addressList.add(add);
+
+		// to return as entity as null
+		//Mocking repository method
+		Mockito.when(userRepo.findByContactNumber(user.getContactNumber())).thenReturn(Optional.ofNullable(null));
 		
 		String success = userService.registerUser(user);
 		Assertions.assertEquals(environment.getProperty("UserService.USER_REGISTER_SUCCESS"), success);
