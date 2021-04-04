@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.project.exception.InvalidCredentialsException;
 import com.project.exception.UserServiceException;
+import com.project.model.LoginCredentialsDto;
 import com.project.model.UsersDto;
 import com.project.service.UserServiceImpl;
 
@@ -34,8 +36,14 @@ public class UserApi {
 	public ResponseEntity<String> registerUser(@Valid @RequestBody UsersDto user) throws UserServiceException, NoSuchAlgorithmException
 	{
 		String success = userService.registerUser(user);
-		System.out.println(success);
 		return new ResponseEntity<String>(success,HttpStatus.OK);
 	}
 	
+	@PostMapping(value="/login")
+	public ResponseEntity<String> userLogin(@Valid @RequestBody LoginCredentialsDto login) throws NoSuchAlgorithmException, InvalidCredentialsException
+	{
+		String success = userService.userLogin(login);
+		System.out.println("succes msg: "+success);
+		return new ResponseEntity<String>(success,HttpStatus.OK);
+	}
 }

@@ -144,6 +144,7 @@ public class UserServiceImpl implements UserService{
 			Users user = op.get();
 			if(user.getPassword().equals(hashingUtility.getHashValue(login.getPassword())))
 			{
+				System.out.println("Suucess in service - "+environment.getProperty("UserService.USER_LOGIN_SUCCESS"));
 				return environment.getProperty("UserService.USER_LOGIN_SUCCESS");
 			}
 			else

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.project.exception.RestaurantNotFoundException;
 import com.project.exception.UserServiceException;
+import com.project.exception.InvalidCredentialsException;
+
 
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
@@ -40,8 +42,8 @@ public class ExceptionControllerAdvice {
 		return new ResponseEntity<ErrorInfo>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@ExceptionHandler(UserServiceException.class)
-	public ResponseEntity<ErrorInfo> userServiceExceptionHandler(UserServiceException exception) {
+	@ExceptionHandler({UserServiceException.class,InvalidCredentialsException.class})
+	public ResponseEntity<ErrorInfo> userServiceExceptionHandler(Exception exception) {
 		ErrorInfo error = new ErrorInfo();
 		error.setErrorMessage(environment.getProperty(exception.getMessage()));
 		error.setTimestamp(LocalDateTime.now());

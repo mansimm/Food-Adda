@@ -1,5 +1,10 @@
-#input for register user - valid
+1) Get all restaurants api 
+http://localhost:4000/foodie/searchAPI/getAllRestaurants
 
+
+2) input for register user - valid
+#Post - add new user
+http://localhost:4000/foodie/userAPI/register
 {
     "userName":"Jackey chain six",
     "emailId":"Jack@gmail.com",
@@ -21,4 +26,19 @@
             "pincode":"123128"
         }
     ]
+}
+
+3) Login
+http://localhost:4000/foodie/userAPI/login
+#input-invalid
+
+{
+    "contactNumber":"9234567890",
+    "password": "Mansi@13"
+}
+#input-valid
+
+{
+    "contactNumber":"9234567897",
+    "password": "Jack@22"
 }
