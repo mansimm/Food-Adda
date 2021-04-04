@@ -69,8 +69,16 @@ public class UserServiceImpl implements UserService{
 					address.setUserState(user.getAddressList().get(0).getUserState());
 					
 				}
-				
-				userPresent.getAddressList().add(address);
+				if(userPresent.getAddressList()==null)
+				{
+					List<UserAddress> newadd = new ArrayList<UserAddress>();
+					newadd.add(address);
+					userPresent.setAddressList(newadd);
+				}
+				else
+				{
+					userPresent.getAddressList().add(address);
+				}
 
 			}
 			else if(user.getRoles().get(0).getRoleType().equals(Role.VENDOR))
