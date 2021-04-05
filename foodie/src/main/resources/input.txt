@@ -112,7 +112,30 @@ http://localhost:4000/foodie/customerAPI/addNewAddress/8882039476
 #invalide - exception for non customer role
 http://localhost:4000/foodie/customerAPI/viewAllAddresses/8875632142
 
-
+---update address
+http://localhost:4000/foodie/customerAPI/updateAddress/8882039476
+#input valid
+ {
+        "userAddressId": 10,
+        "userAddressName": "updated10",
+        "addressLine1": "304, Rajhans Apartments",
+        "addressLine2": "updated Lashkar Mohalla",
+        "area": "Vasant Vihar",
+        "city": "Delhi",
+        "userState": "Delhi",
+        "pincode": "110021"
+    }
+#Inbvalid - address not found
+ {
+        "userAddressId": 100,
+        "userAddressName": "updated10",
+        "addressLine1": "304, Rajhans Apartments",
+        "addressLine2": "updated Lashkar Mohalla",
+        "area": "Vasant Vihar",
+        "city": "Delhi",
+        "userState": "Delhi",
+        "pincode": "110021"
+    }
 
 
 

@@ -305,4 +305,74 @@ public class CustomerServiceImpl implements CustomerService {
 		userRepo.save(user);
 		return environment.getProperty("UserService.ADDRESS_ADDED_SUCCESS");
 	}
+	
+	public String updateAddress(UserAddressDto addressDto,String contactNumber) throws UserServiceException
+	{
+		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
+		Users user = op.orElseThrow(()->new UserServiceException("orderService.NO_USER_FOUND"));
+		
+		if(user.getRoles()==null|| user.getRoles().isEmpty())
+		{
+			throw new UserServiceException("orderService.Invalid_USER_ROLE");
+		}
+		Boolean flag = false;
+		for(Roles role: user.getRoles())
+		{
+			if(role.getRoleType().equals(Role.CUSTOMER))
+			{
+				flag=true;
+			}
+		}
+		if(flag==false)
+		{
+			throw new UserServiceException("orderService.Invalid_USER_ROLE");
+		}
+		Boolean present = false;
+		for(UserAddress userAddress : user.getAddressList())
+		{
+			if(userAddress.getUserAddressId().equals(addressDto.getUserAddressId()))
+			{
+				present = true;
+				break;
+			}
+		}
+		if(present==false)
+		{
+			throw new UserServiceException("UserService.ADDRESS_NOT_FOUND");
+		}
+		int i=0;
+		List<UserAddress> list = new ArrayList();
+		for(UserAddress userAddress : user.getAddressList())
+		{
+			if(userAddress.getUserAddressId().equals(addressDto.getUserAddressId()))
+			{
+				userAddress.setUserAddressId(addressDto.getUserAddressId());
+				userAddress.setAddressLine1(addressDto.getAddressLine1());
+				userAddress.setAddressLine2(addressDto.getAddressLine2());
+				userAddress.setArea(addressDto.getArea());
+				userAddress.setCity(addressDto.getCity());
+				userAddress.setPincode(addressDto.getPincode());
+				userAddress.setUserAddressName(addressDto.getUserAddressName());
+				userAddress.setUserState(addressDto.getUserState());
+				list.add(userAddress);
+				
+			}
+			else
+			{
+				list.add(userAddress);
+			}
+			i++;
+		}
+		user.setAddressList(list);
+		userRepo.save(user);
+		return environment.getProperty("UserService.UPDATE_ADDRESS");
+		
+	}
+	
+	public String deleteAddress()
+	{
+		return null;
+	}
+
+	
 }

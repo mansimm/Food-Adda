@@ -19,6 +19,7 @@ public interface CustomerService {
 	public List<RestaurantDto>  viewNearbyRestaurant(String contactNumber,String area) throws UserServiceException;
 	public List<UserAddressDto> viewAllAddresses(String contactNumber) throws UserServiceException;
 	public String addNewAddress(UserAddressDto addressDto,String contactNumber) throws UserServiceException;
+	public String updateAddress(UserAddressDto addressDto,String contactNumber) throws UserServiceException;
 
 
 }
