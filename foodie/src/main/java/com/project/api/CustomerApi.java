@@ -50,7 +50,7 @@ public class CustomerApi {
 	}
 	
 	@PostMapping(value="/viewOrder/{contactNumber}")
-	public ResponseEntity<ViewOrdersDto> placeOrder(
+	public ResponseEntity<ViewOrdersDto> viewOrder(
 			@PathVariable(value="contactNumber")
 			@Pattern(regexp="[6789][0-9]{9}",message="{UserValidator.INVALID_CONTACT_NUMBER_FORMAT}") 
 			String contactNumber) throws UserServiceException

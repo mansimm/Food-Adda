@@ -105,6 +105,7 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 		return bill.intValue();
 	}
+	//veiw resturant name remaining
 	@Override
 	public List<ViewOrdersDto> viewOrder(String contactNumber) throws UserServiceException
 	{		
@@ -169,6 +170,10 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 		//else find by given area
 		List<Restaurant> rest = searchRepo.getAllRestaurantByArea(area);
+		if(rest == null || rest.isEmpty())
+		{
+			throw new UserServiceException("UserService.RESTAURANT_NOT_FOUND");
+		}
 		List<RestaurantDto> restDto;
 		restDto = rest.stream().map(x->{
 			RestaurantDto rd = new RestaurantDto();
