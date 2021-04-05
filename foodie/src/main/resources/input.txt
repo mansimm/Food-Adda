@@ -42,3 +42,33 @@ http://localhost:4000/foodie/userAPI/login
     "contactNumber":"9234567897",
     "password": "Jack@22"
 }
+
+3)Place order
+#invalid - no user found
+http://localhost:4000/foodie/customerAPI/placeOrder/9234567899
+#Valid
+http://localhost:4000/foodie/customerAPI/placeOrder/8884967823
+
+#body
+{
+    "orderId": null,
+    "orderBill": 150,
+    "orderStatus": "Placed",
+    "orderItemsList": [
+        {
+            "orderItemsId": null,
+            "dish": {
+                "dishId": null,
+                "dishName": "Chicken Burger",
+                "dishCuisine": "Burger",
+                "dishType": "Nonveg",
+                "dishDescription": "Spicy and chrunchy chicken tikki in soft bun with fresh lettuce and mustard sauce",
+                "price": 150.0,
+                "avgRating": 4.5,
+                "speciality": "Chef Special",
+                "imageUrl": "assets/chicken_burger.jpg"
+            },
+            "qty": 1
+        }
+    ]
+}
