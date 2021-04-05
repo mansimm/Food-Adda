@@ -72,3 +72,18 @@ http://localhost:4000/foodie/customerAPI/placeOrder/8884967823
         }
     ]
 }
+
+4)View Order
+#Valid
+http://localhost:4000/foodie/customerAPI/viewOrder/8875632142
+
+#invalid - no user found
+http://localhost:4000/foodie/customerAPI/viewOrder/8875632141
+
+5)view nearby restourants
+#find by area of customer
+http://localhost:4000/foodie/customerAPI/viewNearbyRestaurant/9880253413/noarea
+#if customer have multiple address then use selected area
+http://localhost:4000/foodie/customerAPI/viewNearbyRestaurant/9880253413/Baner
+#for role other than customer
+http://localhost:4000/foodie/customerAPI/viewNearbyRestaurant/8875632142/Baner

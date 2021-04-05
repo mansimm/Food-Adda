@@ -2,6 +2,7 @@ package com.project.service;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -14,13 +15,23 @@ import org.springframework.stereotype.Service;
 import com.project.entity.Dish;
 import com.project.entity.OrderItems;
 import com.project.entity.Orders;
+import com.project.entity.Restaurant;
+import com.project.entity.Roles;
 import com.project.entity.Users;
 import com.project.exception.UserServiceException;
+import com.project.model.DishDto;
 import com.project.model.LoginCredentialsDto;
 import com.project.model.OrderItemsDto;
 import com.project.model.OrderStatus;
+import com.project.model.OrdersDto;
+import com.project.model.RestaurantDto;
+import com.project.model.RestaurantTransactionDto;
+import com.project.model.Role;
 import com.project.model.UsersDto;
+import com.project.model.ViewOrdersDto;
 import com.project.repository.UserRepo;
+import com.project.repository.SearchRepo;
+
 
 @Service
 @Transactional
@@ -28,6 +39,8 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	UserRepo userRepo;
+	@Autowired
+	SearchRepo searchRepo;
 	
 	@Override
 	public Orders placeOrder(List<OrderItemsDto> orderItemsList,String contactNumber) throws UserServiceException
@@ -83,5 +96,112 @@ public class CustomerServiceImpl implements CustomerService {
 			bill = bill + orderItem.getQty() * orderItem.getDish().getPrice();
 		}
 		return bill.intValue();
+	}
+	@Override
+	public List<ViewOrdersDto> viewOrder(String contactNumber) throws UserServiceException
+	{		
+		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
+		Users user = op.orElseThrow(()->new UserServiceException("orderService.NO_USER_FOUND"));
+		
+		if(user.getOrdersList()==null || user.getOrdersList().isEmpty())
+		{
+			throw  new UserServiceException("orderService.NO_ORDER_FOUND");
+		}
+		List<ViewOrdersDto> viewOrdersList;
+		List<Orders> ordersEntityList = user.getOrdersList();
+		viewOrdersList = ordersEntityList.stream().map(x->{
+			ViewOrdersDto viewOrder = new ViewOrdersDto();
+			viewOrder.setOrderId(x.getOrderId());
+			viewOrder.setTotalPrice(x.getOrderBill());
+			
+			List<OrderItems> orderItems = x.getOrderItemsList();
+			List<OrderItemsDto> orderItemsDtoList = orderItems.stream().map(y->{
+				OrderItemsDto orderItemsDto = new OrderItemsDto();
+				orderItemsDto.setQty(y.getQty());
+				DishDto dish = new DishDto();
+				dish.setDishName(y.getDish().getDishName());
+				dish.setPrice(y.getDish().getPrice());
+				orderItemsDto.setDish(dish);
+				return orderItemsDto;
+			}).collect(Collectors.toList());
+			viewOrder.setOrderItems(orderItemsDtoList);
+			//viewOrder.setRestaurantName(searchRepo.findRestaurantNameByDishesDishId(orderItems.get(0).getDish().getDishId()));
+			//System.out.println("\n @@@@ result == "+searchRepo.findRestaurantNameByDishesDish(orderItems.get(0).getDish()));
+			return viewOrder;
+		}).collect(Collectors.toList());
+		return viewOrdersList;
+	}
+	
+	@Override
+	public List<RestaurantDto>  viewNearbyRestaurant(String contactNumber,String area) throws UserServiceException
+	{
+		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
+		Users user = op.orElseThrow(()->new UserServiceException("orderService.NO_USER_FOUND"));
+		
+		if(user.getRoles()==null|| user.getRoles().isEmpty())
+		{
+			throw new UserServiceException("orderService.Invalid_USER_ROLE");
+		}
+		Boolean flag = false;
+		for(Roles role: user.getRoles())
+		{
+			if(role.getRoleType().equals(Role.CUSTOMER))
+			{
+				flag=true;
+			}
+		}
+		if(flag==false)
+		{
+			throw new UserServiceException("orderService.Invalid_USER_ROLE");
+		}
+		//find by default ie. only one address
+		if(area.equals("noarea"))
+		{
+			area = user.getAddressList().get(0).getArea();
+		}
+		//else find by given area
+		List<Restaurant> rest = searchRepo.getAllRestaurantByArea(area);
+		List<RestaurantDto> restDto;
+		restDto = rest.stream().map(x->{
+			RestaurantDto rd = new RestaurantDto();
+			rd.setAddressLine1(x.getAddressLine1());
+			rd.setApprovalStatus(x.getApprovalStatus());
+			rd.setArea(x.getArea());
+			rd.setAvgRating(x.getAvgRating());
+			rd.setCity(x.getCity());
+			rd.setPincode(x.getPincode());
+			List<DishDto> dd = x.getDishes().stream().map(y->{
+				DishDto d = new DishDto();
+				d.setAvgRating(y.getAvgRating());
+				d.setDishCuisine(y.getDishCuisine());
+				d.setDishDescription(y.getDishDescription());
+				d.setDishId(y.getDishId());
+				d.setDishName(y.getDishName());
+				d.setDishType(y.getDishType());
+				d.setImageUrl(y.getImageUrl());
+				d.setPrice(y.getPrice());
+				d.setSpeciality(y.getSpeciality());
+				return d;
+			}).collect(Collectors.toList());
+			
+			rd.setDishes(dd);
+			String[] photos=x.getPhotoUrls().split("-");
+			rd.setPhotoUrls(Arrays.asList(photos));
+			rd.setResState(x.getResState());
+			rd.setRestaurantContact(x.getRestaurantContact());
+			rd.setRestaurantId(x.getRestaurantId());
+			rd.setRestaurantName(x.getRestaurantName());
+			rd.setRestaurantType(x.getRestaurantType());
+			
+			RestaurantTransactionDto tr = new RestaurantTransactionDto();
+			tr.setRestaurantApproxCost(x.getTransaction().getRestaurantApproxCost());
+			tr.setRestaurantOrderCounter(x.getTransaction().getRestaurantOrderCounter());
+			tr.setRestaurantStatus(x.getTransaction().getRestaurantStatus());
+			tr.setRestaurantTransactionId(x.getTransaction().getRestaurantTransactionId());
+			
+			rd.setTransaction(tr);
+			return rd;
+		}).collect(Collectors.toList());
+		return restDto;
 	}
 }
