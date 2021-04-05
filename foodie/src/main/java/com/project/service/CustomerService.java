@@ -20,6 +20,6 @@ public interface CustomerService {
 	public List<UserAddressDto> viewAllAddresses(String contactNumber) throws UserServiceException;
 	public String addNewAddress(UserAddressDto addressDto,String contactNumber) throws UserServiceException;
 	public String updateAddress(UserAddressDto addressDto,String contactNumber) throws UserServiceException;
-
+	public String deleteAddress(UserAddressDto addressDto,String contactNumber) throws UserServiceException;
 
 }

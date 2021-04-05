@@ -314,6 +314,7 @@ public class CustomerServiceImpl implements CustomerService {
 		return environment.getProperty("UserService.ADDRESS_ADDED_SUCCESS");
 	}
 	
+	@Override
 	public String updateAddress(UserAddressDto addressDto,String contactNumber) throws UserServiceException
 	{
 		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
@@ -379,6 +380,7 @@ public class CustomerServiceImpl implements CustomerService {
 		
 	}
 	
+	@Override
 	public String deleteAddress(UserAddressDto addressDto,String contactNumber) throws UserServiceException
 	{
 		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
