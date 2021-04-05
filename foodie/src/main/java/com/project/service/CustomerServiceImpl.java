@@ -27,6 +27,7 @@ import com.project.model.OrdersDto;
 import com.project.model.RestaurantDto;
 import com.project.model.RestaurantTransactionDto;
 import com.project.model.Role;
+import com.project.model.UserAddressDto;
 import com.project.model.UsersDto;
 import com.project.model.ViewOrdersDto;
 import com.project.repository.UserRepo;
@@ -203,5 +204,45 @@ public class CustomerServiceImpl implements CustomerService {
 			return rd;
 		}).collect(Collectors.toList());
 		return restDto;
+	}
+	@Override
+	public List<UserAddressDto> viewAllAddresses(String contactNumber) throws UserServiceException
+	{
+		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
+		Users user = op.orElseThrow(()->new UserServiceException("orderService.NO_USER_FOUND"));
+		
+		if(user.getRoles()==null|| user.getRoles().isEmpty())
+		{
+			throw new UserServiceException("orderService.Invalid_USER_ROLE");
+		}
+		Boolean flag = false;
+		for(Roles role: user.getRoles())
+		{
+			if(role.getRoleType().equals(Role.CUSTOMER))
+			{
+				flag=true;
+			}
+		}
+		if(flag==false)
+		{
+			throw new UserServiceException("orderService.Invalid_USER_ROLE");
+		}
+		
+		List<UserAddressDto> userAddressDtoList;
+		userAddressDtoList = user.getAddressList().stream().map(x->{
+			UserAddressDto userAddressDto = new UserAddressDto();
+			
+			userAddressDto.setAddressLine1(x.getAddressLine1());
+			userAddressDto.setAddressLine2(x.getAddressLine2());
+			userAddressDto.setArea(x.getArea());
+			userAddressDto.setCity(x.getCity());
+			userAddressDto.setPincode(x.getPincode());
+			userAddressDto.setUserAddressId(x.getUserAddressId());
+			userAddressDto.setUserAddressName(x.getUserAddressName());
+			userAddressDto.setUserState(x.getUserState());
+			return userAddressDto;
+		}).collect(Collectors.toList());
+		return userAddressDtoList;
+		
 	}
 }

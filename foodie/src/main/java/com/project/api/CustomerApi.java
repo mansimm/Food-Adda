@@ -25,6 +25,7 @@ import com.project.exception.UserServiceException;
 import com.project.model.LoginCredentialsDto;
 import com.project.model.OrderItemsDto;
 import com.project.model.RestaurantDto;
+import com.project.model.UserAddressDto;
 import com.project.model.ViewOrdersDto;
 import com.project.service.CustomerServiceImpl;
 
@@ -70,5 +71,14 @@ public class CustomerApi {
 	{
 		List<RestaurantDto> rest = customerService.viewNearbyRestaurant(contactNumber, area);
 		return new ResponseEntity(rest,HttpStatus.OK);
+	}
+	@GetMapping(value="/viewAllAddresses/{contactNumber}")
+	public ResponseEntity<List<UserAddressDto>> viewAllAddresses(
+			@PathVariable(value="contactNumber")
+			@Pattern(regexp="[6789][0-9]{9}",message="{UserValidator.INVALID_CONTACT_NUMBER_FORMAT}") 
+			String contactNumber) throws UserServiceException
+	{
+		List<UserAddressDto> list = customerService.viewAllAddresses(contactNumber);
+		return new ResponseEntity(list,HttpStatus.OK);
 	}
 }

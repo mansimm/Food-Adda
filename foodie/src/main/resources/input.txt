@@ -87,3 +87,9 @@ http://localhost:4000/foodie/customerAPI/viewNearbyRestaurant/9880253413/noarea
 http://localhost:4000/foodie/customerAPI/viewNearbyRestaurant/9880253413/Baner
 #for role other than customer
 http://localhost:4000/foodie/customerAPI/viewNearbyRestaurant/8875632142/Baner
+
+6) view all address 
+#invalid - role other than customer - Sorry! You are not customer.
+http://localhost:4000/foodie/customerAPI/viewAllAddresses/8875632142
+#Valid
+http://localhost:4000/foodie/customerAPI/viewAllAddresses/8882039476
