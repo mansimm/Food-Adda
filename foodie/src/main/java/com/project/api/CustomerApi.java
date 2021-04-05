@@ -104,4 +104,16 @@ public class CustomerApi {
 		String success = customerService.updateAddress(addressDto, contactNumber);
 		return new ResponseEntity(success,HttpStatus.CREATED);
 	}
+	@PostMapping(value="/deleteAddress/{contactNumber}")
+	public ResponseEntity<String> deleteAddress(
+			@PathVariable(value="contactNumber")
+			@Pattern(regexp="[6789][0-9]{9}",message="{UserValidator.INVALID_CONTACT_NUMBER_FORMAT}")
+			String contactNumber,
+			@RequestBody
+			@Valid
+			UserAddressDto addressDto) throws UserServiceException
+	{
+		String success = customerService.deleteAddress(addressDto, contactNumber);
+		return new ResponseEntity(success,HttpStatus.CREATED);
+	}
 }

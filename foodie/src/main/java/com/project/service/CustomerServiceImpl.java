@@ -33,6 +33,7 @@ import com.project.model.UserAddressDto;
 import com.project.model.UsersDto;
 import com.project.model.ViewOrdersDto;
 import com.project.repository.UserRepo;
+import com.project.repository.AddressRepo;
 import com.project.repository.SearchRepo;
 
 
@@ -44,6 +45,8 @@ public class CustomerServiceImpl implements CustomerService {
 	UserRepo userRepo;
 	@Autowired
 	SearchRepo searchRepo;
+	@Autowired
+	AddressRepo addressRepo;
 	@Autowired
 	Environment environment;
 	
@@ -315,6 +318,10 @@ public class CustomerServiceImpl implements CustomerService {
 		{
 			throw new UserServiceException("orderService.Invalid_USER_ROLE");
 		}
+		if(user.getAddressList()==null|| user.getAddressList().isEmpty())
+		{
+			throw new UserServiceException("UserService.ADDRESS_NOT_FOUND");
+		}
 		Boolean flag = false;
 		for(Roles role: user.getRoles())
 		{
@@ -340,7 +347,6 @@ public class CustomerServiceImpl implements CustomerService {
 		{
 			throw new UserServiceException("UserService.ADDRESS_NOT_FOUND");
 		}
-		int i=0;
 		List<UserAddress> list = new ArrayList();
 		for(UserAddress userAddress : user.getAddressList())
 		{
@@ -361,7 +367,6 @@ public class CustomerServiceImpl implements CustomerService {
 			{
 				list.add(userAddress);
 			}
-			i++;
 		}
 		user.setAddressList(list);
 		userRepo.save(user);
@@ -369,9 +374,62 @@ public class CustomerServiceImpl implements CustomerService {
 		
 	}
 	
-	public String deleteAddress()
+	public String deleteAddress(UserAddressDto addressDto,String contactNumber) throws UserServiceException
 	{
-		return null;
+		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
+		Users user = op.orElseThrow(()->new UserServiceException("orderService.NO_USER_FOUND"));
+		
+		if(user.getRoles()==null|| user.getRoles().isEmpty())
+		{
+			throw new UserServiceException("orderService.Invalid_USER_ROLE");
+		}
+		if(user.getAddressList()==null|| user.getAddressList().isEmpty())
+		{
+			throw new UserServiceException("UserService.ADDRESS_NOT_FOUND");
+		}
+		Boolean flag = false;
+		for(Roles role: user.getRoles())
+		{
+			if(role.getRoleType().equals(Role.CUSTOMER))
+			{
+				flag=true;
+			}
+		}
+		if(flag==false)
+		{
+			throw new UserServiceException("orderService.Invalid_USER_ROLE");
+		}
+		Boolean present = false;
+		for(UserAddress userAddress : user.getAddressList())
+		{
+			if(userAddress.getUserAddressId().equals(addressDto.getUserAddressId()))
+			{
+				present = true;
+				break;
+			}
+		}
+		if(present==false)
+		{
+			throw new UserServiceException("UserService.ADDRESS_NOT_FOUND");
+		}
+		Integer id = 0;
+		List<UserAddress> list = new ArrayList();
+		for(UserAddress userAddress : user.getAddressList())
+		{
+			if(userAddress.getUserAddressId().equals(addressDto.getUserAddressId()))
+			{
+				//don't add	
+				id=addressDto.getUserAddressId();
+			}
+			else
+			{
+				list.add(userAddress);
+			}
+		}
+		user.setAddressList(list);
+		addressRepo.deleteById(id);
+		userRepo.save(user);
+		return environment.getProperty("UserService.DELETE_ADDRESS_success");
 	}
 
 	

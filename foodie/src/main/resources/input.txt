@@ -137,7 +137,19 @@ http://localhost:4000/foodie/customerAPI/updateAddress/8882039476
         "pincode": "110021"
     }
 
-
+----delete address 
+http://localhost:4000/foodie/customerAPI/deleteAddress/8882039476
+#input
+ {
+        "userAddressId": 19,
+        "userAddressName": "updated10",
+        "addressLine1": "304, Rajhans Apartments",
+        "addressLine2": "updated Lashkar Mohalla",
+        "area": "Vasant Vihar",
+        "city": "Delhi",
+        "userState": "Delhi",
+        "pincode": "110021"
+    }
 
 
 
