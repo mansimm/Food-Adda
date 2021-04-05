@@ -93,3 +93,28 @@ http://localhost:4000/foodie/customerAPI/viewNearbyRestaurant/8875632142/Baner
 http://localhost:4000/foodie/customerAPI/viewAllAddresses/8875632142
 #Valid
 http://localhost:4000/foodie/customerAPI/viewAllAddresses/8882039476
+
+---add new address
+#address already exist
+http://localhost:4000/foodie/customerAPI/addNewAddress/8882039476
+#input
+ {
+        "userAddressName": "Home",
+        "addressLine1": "304, Rajhans Apartments",
+        "addressLine2": "Lashkar Mohalla",
+        "area": "Vasant Vihar",
+        "city": "Delhi",
+        "userState": "Delhi",
+        "pincode": "110021"
+    }
+    
+#valid - only change userAddressName in above input & use same uri
+#invalide - exception for non customer role
+http://localhost:4000/foodie/customerAPI/viewAllAddresses/8875632142
+
+
+
+
+
+
+

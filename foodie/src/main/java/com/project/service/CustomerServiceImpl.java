@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.project.entity.Dish;
@@ -17,6 +18,7 @@ import com.project.entity.OrderItems;
 import com.project.entity.Orders;
 import com.project.entity.Restaurant;
 import com.project.entity.Roles;
+import com.project.entity.UserAddress;
 import com.project.entity.Users;
 import com.project.exception.UserServiceException;
 import com.project.model.DishDto;
@@ -42,6 +44,8 @@ public class CustomerServiceImpl implements CustomerService {
 	UserRepo userRepo;
 	@Autowired
 	SearchRepo searchRepo;
+	@Autowired
+	Environment environment;
 	
 	@Override
 	public Orders placeOrder(List<OrderItemsDto> orderItemsList,String contactNumber) throws UserServiceException
@@ -244,5 +248,61 @@ public class CustomerServiceImpl implements CustomerService {
 		}).collect(Collectors.toList());
 		return userAddressDtoList;
 		
+	}
+	@Override
+	public String addNewAddress(UserAddressDto addressDto,String contactNumber) throws UserServiceException
+	{
+		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
+		Users user = op.orElseThrow(()->new UserServiceException("orderService.NO_USER_FOUND"));
+		
+		if(user.getRoles()==null|| user.getRoles().isEmpty())
+		{
+			throw new UserServiceException("orderService.Invalid_USER_ROLE");
+		}
+		Boolean flag = false;
+		for(Roles role: user.getRoles())
+		{
+			if(role.getRoleType().equals(Role.CUSTOMER))
+			{
+				flag=true;
+			}
+		}
+		if(flag==false)
+		{
+			throw new UserServiceException("orderService.Invalid_USER_ROLE");
+		}
+		Boolean duplicate = false;
+		if(user.getAddressList()!=null || !user.getAddressList().isEmpty())
+		{
+			for(UserAddress userAddress : user.getAddressList())
+			{
+				if(userAddress.getUserAddressName().equals(addressDto.getUserAddressName()))
+				{
+					duplicate = true;
+					break;
+				}
+			}
+			if(duplicate)
+			{
+				throw new UserServiceException("UserService.ADDRESS_NAME_ALREADY_EXISTS");
+			}	
+		}
+		if(user.getAddressList()==null)
+		{
+			List<UserAddress> list=new ArrayList();
+			user.setAddressList(list);
+		}
+		UserAddress add = new UserAddress();
+		add.setAddressLine1(addressDto.getAddressLine1());
+		add.setAddressLine2(addressDto.getAddressLine2());
+		add.setArea(addressDto.getArea());
+		add.setCity(addressDto.getCity());
+		add.setPincode(addressDto.getPincode());
+		add.setUserAddressName(addressDto.getUserAddressName());
+		add.setUserState(addressDto.getUserState());
+		
+		user.getAddressList().add(add);
+		userRepo.save(user);
+		return environment.getProperty("UserService.ADDRESS_ADDED_SUCCESS");
 	}
 }

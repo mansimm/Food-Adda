@@ -41,8 +41,6 @@ public class CustomerApi {
 	@PostMapping(value="/placeOrder/{contactNumber}")
 	public ResponseEntity<Orders> placeOrder(
 			@PathVariable(value="contactNumber")
-			//@Min(value=6000000000L,message="{UserValidator.INVALID_CONTACT_NUMBER_Min}")
-			//@Max(value=9999999999L,message="{UserValidator.INVALID_CONTACT_NUMBER_Max}")
 			@Pattern(regexp="[6789][0-9]{9}",message="{UserValidator.INVALID_CONTACT_NUMBER_FORMAT}") 
 			String contactNumber,
 			@RequestBody List<OrderItemsDto> orderItemsList) throws UserServiceException
@@ -80,5 +78,17 @@ public class CustomerApi {
 	{
 		List<UserAddressDto> list = customerService.viewAllAddresses(contactNumber);
 		return new ResponseEntity(list,HttpStatus.OK);
+	}
+	@PostMapping(value="/addNewAddress/{contactNumber}")
+	public ResponseEntity<String> addNewAddress(
+			@PathVariable(value="contactNumber")
+			@Pattern(regexp="[6789][0-9]{9}",message="{UserValidator.INVALID_CONTACT_NUMBER_FORMAT}")
+			String contactNumber,
+			@RequestBody
+			@Valid
+			UserAddressDto addressDto) throws UserServiceException
+	{
+		String success = customerService.addNewAddress(addressDto, contactNumber);
+		return new ResponseEntity(success,HttpStatus.CREATED);
 	}
 }
