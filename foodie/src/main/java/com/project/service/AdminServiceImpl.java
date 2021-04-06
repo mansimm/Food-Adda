@@ -58,7 +58,7 @@ public class AdminServiceImpl implements AdminService {
 		List<RestaurantDto> rest = searchService.getAllRestaurant();
 		return rest;
 	}
-	
+	@Override
 	public String accepctRegistrationRequest(RestaurantDto restaurantDto,String contactNumber) throws UserServiceException, RestaurantNotFoundException, AdminServiceException
 	{
 		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
@@ -94,8 +94,40 @@ public class AdminServiceImpl implements AdminService {
 		return environment.getProperty("AdminService.REGISTRATION_ACCEPTED");
 	}
 	
-	public String rejectRegistrationRequest()
+	@Override
+	public String rejectRegistrationRequest(RestaurantDto restaurantDto,String contactNumber) throws UserServiceException, RestaurantNotFoundException, AdminServiceException
 	{
-		return null;
+		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
+		Users user = op.orElseThrow(()->new UserServiceException("AdminService.NO_USER_FOUND"));
+		
+		if(user.getRoles()==null|| user.getRoles().isEmpty())
+		{
+			throw new UserServiceException("AdminService.Invalid_USER_ROLE");
+		}
+		Boolean flag = false;
+		for(Roles role: user.getRoles())
+		{
+			if(role.getRoleType().equals(Role.ADMIN))
+			{
+				flag=true;
+			}
+		}
+		if(flag==false)
+		{
+			throw new UserServiceException("AdminService.Invalid_USER_ROLE");
+		}
+		Optional<Restaurant> opRest =  restaurantRepo.findById(restaurantDto.getRestaurantId());
+		Restaurant rest = opRest.orElseThrow(()-> new RestaurantNotFoundException("AdminService.RESTAURANT_NOT_FOUND"));
+		
+		if(rest.getApprovalStatus().equals(ApprovalStatus.Pending.toString()))
+		{
+			rest.setApprovalStatus(ApprovalStatus.Rejected.toString());
+		}
+		else
+		{
+			throw new AdminServiceException("AdminService.INVALID_STATUS");
+		}
+		return environment.getProperty("AdminService.REGISTRATION_REJECTED");
 	}
+	
 }

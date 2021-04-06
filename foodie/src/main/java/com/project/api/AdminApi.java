@@ -52,4 +52,16 @@ public class AdminApi {
 		String success = adminServiceImpl.accepctRegistrationRequest(restaurantDto, contactNumber);
 		return new ResponseEntity(success,HttpStatus.OK);
 	}
+	
+	@PostMapping(value="/rejectRegistrationRequest/{contactNumber}")
+	public ResponseEntity<String> rejectRegistrationRequest(
+			@PathVariable
+			@Pattern(regexp="[6789][0-9]{9}",message="{UserValidator.INVALID_CONTACT_NUMBER_FORMAT}") 
+			String contactNumber,
+			@RequestBody
+			RestaurantDto restaurantDto) throws UserServiceException, RestaurantNotFoundException, AdminServiceException
+	{
+		String success = adminServiceImpl.rejectRegistrationRequest(restaurantDto, contactNumber);
+		return new ResponseEntity(success,HttpStatus.OK);
+	}
 }

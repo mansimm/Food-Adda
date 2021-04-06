@@ -183,3 +183,7 @@ http://localhost:4000/foodie/adminAPI/accepctRegistrationRequest/9476888203
 #valid accepted -if old status is Pending
 ---update restaurant set approval_status="Pending" where restaurant_id=1;
 http://localhost:4000/foodie/adminAPI/accepctRegistrationRequest/9476888203
+
+-----------reject request
+http://localhost:4000/foodie/adminAPI/rejectRegistrationRequest/9476888203
+#same cases as above
