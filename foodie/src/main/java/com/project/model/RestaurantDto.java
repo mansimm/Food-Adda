@@ -2,20 +2,50 @@ package com.project.model;
 
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+
 public class RestaurantDto {
 	
 	private Integer restaurantId;
+	
+	@NotNull(message="{RestaurantValidator.INVALID_RESTAURANT_NAME_NULL}")
+	@Pattern(regexp="[A-Z][A-Za-z]*( [A-Za-z]+)*",message="{RestaurantValidator.INVALID_RESTAURANT_NAME}")
 	private String restaurantName;
+	
+	@NotNull(message="{RestaurantValidator.INVALID_RESTAURANT_CONTACT_NULL}")
+	@Pattern(regexp="[6789][0-9]{9}",message="{RestaurantValidator.INVALID_RESTAURANT_CONTACT}")
 	private String restaurantContact;
+	
+	@Pattern(regexp="(Nonveg|Veg|Vegan|Other)",message="{RestaurantValidator.INVALID_RESTAURANT_TYPE}")
 	private String restaurantType;
+	
+	@Pattern(regexp="[A-Za-z ,0-9]",message="{RestaurantValidator.INVALID_RESTAURANT_ADDRESSLINE1}")
 	private String addressLine1;
+	
+	@Pattern(regexp="[a-zA-Z ]+",message="{RestaurantValidator.INVALID_RESTAURANT_AREA}")
 	private String area;
+	
+	@Pattern(regexp="[a-zA-Z]+",message="{RestaurantValidator.INVALID_RESTAURANT_CITY}")
 	private String city;
+	
+	@Pattern(regexp="[a-zA-Z]+",message="{RestaurantValidator.INVALID_RESTAURANT_STATE}")
 	private String resState;
+	
+	@Pattern(regexp="[0-9]{6}",message="{RestaurantValidator.INVALID_RESTAURANT_PIN}")
 	private Integer pincode;
+	
 	private String approvalStatus;
 	
+	@Min(value=0,message="{RestaurantValidator.INVALID_RESTAURANT_RATING}")
+	@Max(value=5,message="{RestaurantValidator.INVALID_RESTAURANT_RATING}")
 	private double avgRating;
+	
+	@Valid
 	private List<DishDto> dishes;
 	private List<String> photoUrls;
 	private RestaurantTransactionDto transaction;

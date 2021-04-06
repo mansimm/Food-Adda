@@ -1,14 +1,33 @@
 package com.project.model;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
+
 public class DishDto {
 
 	private Integer dishId;
+	
+	@Pattern(regexp="[A-Za-z]+( [A-Za-z]+)*",message="{DishValidator.INVALID_DISH_NAME}")
 	private String dishName;
+	
+	@Pattern(regexp="[A-Za-z]+( [A-Za-z]+)*",message="{DishValidator.INVALID_DISH_CUISINE}")
 	private String dishCuisine;
+	
+	@Pattern(regexp="(Nonveg|Veg|Vegan|Other)",message="{DishValidator.INVALID_DISH_TYPE}")
 	private String dishType;
+	
+	@Pattern(regexp="[A-Za-z,]+( [A-Za-z,]+)*",message="{DishValidator.INVALID_DISH_DESCRIPTION}")
 	private String dishDescription;
+	
+	@Min(value=0,message="{DishValidator.INVALID_DISH_PRICE}")
 	private Double price;
+	
+	@Min(value=0,message="{DishValidator.INVALID_DISH_RATING}")
+	@Max(value=5,message="{DishValidator.INVALID_DISH_RATING}")
 	private Double avgRating;
+	
+	@Pattern(regexp="[A-Za-z ]+",message="{DishValidator.INVALID_DISH_SPECIALTY}")
 	private String speciality;
 	private String imageUrl;
 
