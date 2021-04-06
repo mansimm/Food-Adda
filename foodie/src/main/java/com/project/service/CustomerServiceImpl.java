@@ -34,7 +34,7 @@ import com.project.model.UsersDto;
 import com.project.model.ViewOrdersDto;
 import com.project.repository.UserRepo;
 import com.project.repository.AddressRepo;
-import com.project.repository.SearchRepo;
+import com.project.repository.RestaurantRepo;
 
 
 @Service
@@ -44,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	UserRepo userRepo;
 	@Autowired
-	SearchRepo searchRepo;
+	RestaurantRepo restaurantRepo;
 	@Autowired
 	AddressRepo addressRepo;
 	@Autowired
@@ -169,7 +169,7 @@ public class CustomerServiceImpl implements CustomerService {
 			area = user.getAddressList().get(0).getArea();
 		}
 		//else find by given area
-		List<Restaurant> rest = searchRepo.getAllRestaurantByArea(area);
+		List<Restaurant> rest = restaurantRepo.getAllRestaurantByArea(area);
 		if(rest == null || rest.isEmpty())
 		{
 			throw new UserServiceException("UserService.RESTAURANT_NOT_FOUND");

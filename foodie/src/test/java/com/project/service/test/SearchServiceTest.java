@@ -22,7 +22,7 @@ import com.project.exception.RestaurantNotFoundException;
 import com.project.model.DishDto;
 import com.project.model.RestaurantDto;
 import com.project.model.RestaurantTransactionDto;
-import com.project.repository.SearchRepo;
+import com.project.repository.RestaurantRepo;
 import com.project.service.SearchServiceImpl;
 
 
@@ -32,7 +32,7 @@ import com.project.service.SearchServiceImpl;
 public class SearchServiceTest {
 	
 	@Mock
-	SearchRepo searchRepo;
+	RestaurantRepo searchRepo;
 	
 	@InjectMocks
 	SearchServiceImpl searchService;

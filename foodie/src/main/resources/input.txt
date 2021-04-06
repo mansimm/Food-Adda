@@ -1,6 +1,7 @@
 1) Get all restaurants api 
 http://localhost:4000/foodie/searchAPI/getAllRestaurants
 
+***********************************************************************************************
 
 2) input for register user - valid
 #Post - add new user
@@ -28,6 +29,8 @@ http://localhost:4000/foodie/userAPI/register
     ]
 }
 
+***********************************************************************************************
+
 3) Login
 http://localhost:4000/foodie/userAPI/login
 #input-invalid
@@ -42,6 +45,8 @@ http://localhost:4000/foodie/userAPI/login
     "contactNumber":"9234567897",
     "password": "Jack@22"
 }
+
+***********************************************************************************************
 
 3)Place order
 #invalid - no user found
@@ -73,6 +78,8 @@ http://localhost:4000/foodie/customerAPI/placeOrder/8884967823
     ]
 }
 
+***********************************************************************************************
+
 4)View Order
 #Valid
 http://localhost:4000/foodie/customerAPI/viewOrder/8875632142
@@ -87,6 +94,8 @@ http://localhost:4000/foodie/customerAPI/viewNearbyRestaurant/9880253413/noarea
 http://localhost:4000/foodie/customerAPI/viewNearbyRestaurant/9880253413/Baner
 #for role other than customer
 http://localhost:4000/foodie/customerAPI/viewNearbyRestaurant/8875632142/Baner
+
+***********************************************************************************************
 
 6) view all address 
 #invalid - role other than customer - Sorry! You are not customer.
@@ -151,5 +160,12 @@ http://localhost:4000/foodie/customerAPI/deleteAddress/8882039476
         "pincode": "110021"
     }
 
-
+***********************************************************************************************
+7) Admin view all restaurants
+#invalid - no user found 
+http://localhost:4000/foodie/adminAPI/viewAllRegistrationRequests/9880253411
+#invalid - not an admin
+http://localhost:4000/foodie/adminAPI/viewAllRegistrationRequests/8882039476
+#valid
+http://localhost:4000/foodie/adminAPI/viewAllRegistrationRequests/9476888203
 

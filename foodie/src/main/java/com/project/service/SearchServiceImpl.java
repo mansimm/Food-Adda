@@ -14,7 +14,7 @@ import com.project.entity.Restaurant;
 import com.project.exception.RestaurantNotFoundException;
 import com.project.model.RestaurantDto;
 import com.project.model.RestaurantTransactionDto;
-import com.project.repository.SearchRepo;
+import com.project.repository.RestaurantRepo;
 import com.project.model.DishDto;
 
 @Service
@@ -22,7 +22,7 @@ import com.project.model.DishDto;
 public class SearchServiceImpl implements SearchService {
 
 	@Autowired
-	SearchRepo searchRepo;
+	RestaurantRepo searchRepo;
 	
 	@Override
 	public List<RestaurantDto> getAllRestaurant() throws RestaurantNotFoundException{
