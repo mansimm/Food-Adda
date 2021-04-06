@@ -169,3 +169,17 @@ http://localhost:4000/foodie/adminAPI/viewAllRegistrationRequests/8882039476
 #valid
 http://localhost:4000/foodie/adminAPI/viewAllRegistrationRequests/9476888203
 
+-----------accept request
+#input
+{
+        "restaurantId": 1
+}
+#invalid - not admin exception
+http://localhost:4000/foodie/adminAPI/accepctRegistrationRequest/8882039476
+
+#invalid-already accepted or rejected
+http://localhost:4000/foodie/adminAPI/accepctRegistrationRequest/9476888203
+
+#valid accepted -if old status is Pending
+---update restaurant set approval_status="Pending" where restaurant_id=1;
+http://localhost:4000/foodie/adminAPI/accepctRegistrationRequest/9476888203

@@ -189,7 +189,7 @@ INSERT INTO restaurant VALUES (3,104,'Pizza Hut','8784393421','Veg','21, Adalat 
 INSERT INTO restaurant VALUES (4,104,'Master Kitchen','8777772771','Nonveg','52, Sandesh road','Vasant Vihar','Delhi','Delhi',110057,'Accepted',4.1,'assets/masterkitchen1.jpg-assets/masterkitchen2.jpg-assets/masterkitchen3.jpg');
 INSERT INTO restaurant VALUES (5,104,'Diamond Cafe','8977772771','Veg','11, Bandana circle','Vasant Vihar','Delhi','Delhi',110057,'Accepted',4.3,'assets/cafe1.jpg-assets/cafe2.jpg-assets/cafe3.jpg');
 INSERT INTO restaurant VALUES (6,104,'Empire Restaurant','9877226354','Veg','2, Amol Complex','Vasant Vihar','Delhi','Delhi',110057,'Accepted',4.3,'assets/empire1.jpg-assets/empire2.jpg');
--- INSERT INTO restaurant VALUES (7,102,'Barbeque Nation','8823414141','Nonveg',33,'Mayura Circle','Baner','Pune','Maharashtra',411041,'Pending',4.2,'assets/kfca3.jpg-assets/kfca2.jpg-assets/kfca1.jpg');
+--INSERT INTO restaurant VALUES (7,102,'Barbeque Nation','8823414141','Nonveg',33,'Mayura Circle','Baner','Pune','Maharashtra',411041,'Pending',4.2,'assets/kfca3.jpg-assets/kfca2.jpg-assets/kfca1.jpg');
 -- INSERT INTO restaurant VALUES (8,102,'Kamat','7823414141','Nonveg',3,'Madge Circle','Kothrud','Pune','Maharashtra',411038,'Pending',1.0,'assets/kfca2.jpg-assets/kfca1.jpg-assets/kfca3.jpg');
 
 
@@ -293,6 +293,8 @@ SELECT * FROM dish_rating;
 SELECT * FROM wallet;
 SELECT * FROM USER_LIKES;
 SELECT * FROM TABLE_BOOKING;
+
+---update restaurant set approval_status="Pending" where restaurant_id=1;
 
 
 
