@@ -64,4 +64,26 @@ public class AdminApi {
 		String success = adminServiceImpl.rejectRegistrationRequest(restaurantDto, contactNumber);
 		return new ResponseEntity(success,HttpStatus.OK);
 	}
+	
+	@GetMapping(value="/viewLowRatingRestaurants/{contactNumber}")
+	public ResponseEntity<List<RestaurantDto>> viewLowRatingRestaurants(
+			@PathVariable
+			@Pattern(regexp="[6789][0-9]{9}",message="{UserValidator.INVALID_CONTACT_NUMBER_FORMAT}") 
+			String contactNumber) throws RestaurantNotFoundException, UserServiceException, AdminServiceException
+	{
+		List<RestaurantDto> list = adminServiceImpl.viewLowRatingRestaurants(contactNumber);
+		return new ResponseEntity(list,HttpStatus.OK);
+	}
+	
+	@PostMapping(value="/deleteLowRatingRestaurant/{contactNumber}")
+	public ResponseEntity<String> deleteLowRatingRestaurant(
+			@PathVariable
+			@Pattern(regexp="[6789][0-9]{9}",message="{UserValidator.INVALID_CONTACT_NUMBER_FORMAT}") 
+			String contactNumber,
+			@RequestBody
+			RestaurantDto restaurantDto) throws RestaurantNotFoundException, UserServiceException, AdminServiceException
+	{
+		String success = adminServiceImpl.deleteLowRatingRestaurant(restaurantDto,contactNumber);
+		return new ResponseEntity(success,HttpStatus.OK);
+	}
 }

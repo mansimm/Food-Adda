@@ -187,3 +187,7 @@ http://localhost:4000/foodie/adminAPI/accepctRegistrationRequest/9476888203
 -----------reject request
 http://localhost:4000/foodie/adminAPI/rejectRegistrationRequest/9476888203
 #same cases as above
+
+*******************************************************************************************
+8)Admin: Low rating restaurant
+http://localhost:4000/foodie/adminAPI/viewLowRatingRestaurants/9476888203
