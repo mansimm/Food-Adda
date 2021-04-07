@@ -90,21 +90,23 @@ public class VendorServiceImpl implements VendorService {
 		newRest.setAvgRating(restaurantDto.getAvgRating());
 		newRest.setCity(restaurantDto.getCity());
 
-		if (restaurantDto.getDishes() != null) {
-			List<Dish> dishes = restaurantDto.getDishes().stream().map(x -> {
-				Dish d = new Dish();
-				d.setAvgRating(x.getAvgRating());
-				d.setDishCuisine(x.getDishCuisine());
-				d.setDishDescription(x.getDishDescription());
-				d.setDishName(x.getDishName());
-				d.setDishType(x.getDishType());
-				d.setImageUrl(x.getImageUrl());
-				d.setPrice(x.getPrice());
-				d.setSpeciality(x.getSpeciality());
-				return d;
-			}).collect(Collectors.toList());
-			newRest.setDishes(dishes);
-		}
+		//cannot add dishes until restaurant registration is not approved
+		
+//		if (restaurantDto.getDishes() != null) {
+//			List<Dish> dishes = restaurantDto.getDishes().stream().map(x -> {
+//				Dish d = new Dish();
+//				d.setAvgRating(x.getAvgRating());
+//				d.setDishCuisine(x.getDishCuisine());
+//				d.setDishDescription(x.getDishDescription());
+//				d.setDishName(x.getDishName());
+//				d.setDishType(x.getDishType());
+//				d.setImageUrl(x.getImageUrl());
+//				d.setPrice(x.getPrice());
+//				d.setSpeciality(x.getSpeciality());
+//				return d;
+//			}).collect(Collectors.toList());
+//			newRest.setDishes(dishes);
+//		}
 		String arr = "";
 		for (String url : restaurantDto.getPhotoUrls()) {
 			arr = arr + url + "-";

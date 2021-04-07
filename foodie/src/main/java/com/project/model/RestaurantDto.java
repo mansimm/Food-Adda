@@ -46,7 +46,7 @@ public class RestaurantDto {
 	@Max(value=5,message="{RestaurantValidator.INVALID_RESTAURANT_RATING}")
 	private double avgRating;
 	
-	@NotNull(message="{RestaurantValidator.INVALID_RESTAURANT_DISH_NULL}")
+	//@NotNull(message="{RestaurantValidator.INVALID_RESTAURANT_DISH_NULL}")
 	@Valid
 	private List<DishDto> dishes;
 	private List<String> photoUrls;

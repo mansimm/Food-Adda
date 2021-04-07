@@ -8,7 +8,7 @@ public class DishDto {
 
 	private Integer dishId;
 	
-	@Pattern(regexp="[A-Za-z]+( [A-Za-z]+)*",message="{DishValidator.INVALID_DISH_NAME}")
+	@Pattern(regexp="[A-Z][A-Za-z]+( [A-Za-z]+)*",message="{DishValidator.INVALID_DISH_NAME}")
 	private String dishName;
 	
 	@Pattern(regexp="[A-Za-z]+( [A-Za-z]+)*",message="{DishValidator.INVALID_DISH_CUISINE}")
@@ -17,7 +17,7 @@ public class DishDto {
 	@Pattern(regexp="(Nonveg|Veg|Vegan|Other)",message="{DishValidator.INVALID_DISH_TYPE}")
 	private String dishType;
 	
-	@Pattern(regexp="[A-Za-z,]+( [A-Za-z,]+)*",message="{DishValidator.INVALID_DISH_DESCRIPTION}")
+	@Pattern(regexp="[A-Z][A-Za-z,]+( [A-Za-z,]+)*",message="{DishValidator.INVALID_DISH_DESCRIPTION}")
 	private String dishDescription;
 	
 	@Min(value=0,message="{DishValidator.INVALID_DISH_PRICE}")
@@ -27,7 +27,7 @@ public class DishDto {
 	@Max(value=5,message="{DishValidator.INVALID_DISH_RATING}")
 	private Double avgRating;
 	
-	@Pattern(regexp="[A-Za-z ]+",message="{DishValidator.INVALID_DISH_SPECIALTY}")
+	@Pattern(regexp="[A-Z][A-Za-z ]+",message="{DishValidator.INVALID_DISH_SPECIALTY}")
 	private String speciality;
 	private String imageUrl;
 
