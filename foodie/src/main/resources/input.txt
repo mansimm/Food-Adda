@@ -346,3 +346,19 @@ http://localhost:4000/foodie/vendorAPI/addDish/8875632142/9
 #invalid - "errorMessage": "Restaurant registration is pending or rejected, You cannot add dish.",
 http://localhost:4000/foodie/vendorAPI/addDish/8875632142/8
 
+
+---update dish
+#valid
+http://localhost:4000/foodie/vendorAPI/updateDish/8875632142/2
+
+ {
+     "dishId":1006,
+                "dishName": "Vada Pav",
+                "dishCuisine": "Indian Burger",
+                "dishType": "Veg",
+                "dishDescription": "Spicy and chrunchy Vada with soft bun with fresh onian and tomato kechup",
+                "price": 150.0,
+                "avgRating": 4.5,
+                "speciality": "Chef Special",
+                "imageUrl": "assets/vada_pav.jpg"
+            }

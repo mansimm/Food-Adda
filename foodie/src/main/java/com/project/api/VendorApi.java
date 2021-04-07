@@ -70,4 +70,20 @@ public class VendorApi {
 		String success = vendorService.addDish( contactNumber, restaurantId,  dishDto);
 		return new ResponseEntity(success,HttpStatus.OK);
 	}
+	
+
+	@PostMapping(value="/updateDish/{contactNumber}/{restaurantId}")
+	public ResponseEntity<String> updateDish(
+			@PathVariable(value="contactNumber")
+			@Pattern(regexp="[6789][0-9]{9}",message="{UserValidator.INVALID_CONTACT_NUMBER_FORMAT}")
+			String contactNumber,
+			@PathVariable(value="restaurantId")
+			Integer restaurantId,
+			@RequestBody
+			@Valid
+			DishDto dishDto) throws UserServiceException, RestaurantNotFoundException, VendorServiceException
+	{
+		String success = vendorService.updateDish( contactNumber, restaurantId,  dishDto);
+		return new ResponseEntity(success,HttpStatus.OK);
+	}
 }

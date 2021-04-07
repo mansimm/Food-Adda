@@ -23,6 +23,7 @@ import com.project.model.ApprovalStatus;
 import com.project.model.DishDto;
 import com.project.model.RestaurantDto;
 import com.project.model.Role;
+import com.project.repository.DishRepo;
 import com.project.repository.RestaurantRepo;
 import com.project.repository.UserRepo;
 
@@ -34,6 +35,8 @@ public class VendorServiceImpl implements VendorService {
 	UserRepo userRepo;
 	@Autowired
 	RestaurantRepo restaurantRepo;
+	@Autowired
+	DishRepo dishRepo;
 	@Autowired
 	Environment environment;
 	@Autowired
@@ -158,6 +161,7 @@ public class VendorServiceImpl implements VendorService {
 		return rest;
 	}
 
+	@Override
 	public String addDish(String contactNumber, Integer restaurantId, DishDto dishDto)
 			throws UserServiceException, VendorServiceException {
 		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
@@ -178,21 +182,18 @@ public class VendorServiceImpl implements VendorService {
 
 		Optional<Restaurant> restOp = restaurantRepo.findById(restaurantId);
 		Restaurant rest = restOp.orElseThrow(() -> new VendorServiceException("vendorService.RESTAURANT_NOT_FOUND"));
-		
-		if(!rest.getApprovalStatus().equals(ApprovalStatus.Accepted))
-		{
+		//if registration is approved then only vendor can add dish
+		if (!rest.getApprovalStatus().equals(ApprovalStatus.Accepted.toString())) {
 			throw new VendorServiceException("vendorService.RESTAURANT_REGISTRATION_NOT_APPROVED");
 		}
-		//to check if dish is already present
-		for(Dish d:rest.getDishes())
-		{
-			if(d.getDishName().equalsIgnoreCase(dishDto.getDishName()))
-			{
+		// to check if dish is already present
+		for (Dish d : rest.getDishes()) {
+			if (d.getDishName().equalsIgnoreCase(dishDto.getDishName())) {
 				throw new VendorServiceException("vendorService.DISH_ALREADY_PRESENT");
 			}
 		}
 		Dish dish = new Dish();
-		dish.setAvgRating(2.5);//rating should be 2.5 initial for all restaurants
+		dish.setAvgRating(2.5);// rating should be 2.5 initial for all restaurants
 		dish.setDishCuisine(dishDto.getDishCuisine());
 		dish.setDishDescription(dishDto.getDishDescription());
 		dish.setDishName(dishDto.getDishName());
@@ -200,14 +201,58 @@ public class VendorServiceImpl implements VendorService {
 		dish.setImageUrl(dishDto.getImageUrl());
 		dish.setPrice(dishDto.getPrice());
 		dish.setSpeciality(dishDto.getSpeciality());
-		
-		if(rest.getDishes()==null)
-		{
+
+		if (rest.getDishes() == null) {
 			List<Dish> dlist = new ArrayList();
 			rest.setDishes(dlist);
 		}
 		rest.getDishes().add(dish);
-		
+
 		return environment.getProperty("vendorService.DISH_ADDED_SUCCESS");
+	}
+
+	@Override
+	public String updateDish(String contactNumber, Integer restaurantId, DishDto dishDto)
+			throws UserServiceException, VendorServiceException {
+		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
+		Users user = op.orElseThrow(() -> new UserServiceException("vendorService.Invalid_USER_ROLE"));
+
+		if (user.getRoles() == null || user.getRoles().isEmpty()) {
+			throw new UserServiceException("vendorService.Invalid_USER_ROLE");
+		}
+		Boolean flag = false;
+		for (Roles role : user.getRoles()) {
+			if (role.getRoleType().equals(Role.VENDOR)) {
+				flag = true;
+			}
+		}
+		if (flag == false) {
+			throw new UserServiceException("vendorService.Invalid_USER_ROLE");
+		}
+
+		Optional<Restaurant> restOp = restaurantRepo.findById(restaurantId);
+		Restaurant rest = restOp.orElseThrow(() -> new VendorServiceException("vendorService.RESTAURANT_NOT_FOUND"));
+
+		//if registration is approved then only vendor can update
+		if (!rest.getApprovalStatus().equals(ApprovalStatus.Accepted.toString())) {
+			throw new VendorServiceException("vendorService.RESTAURANT_REGISTRATION_NOT_APPROVED");
+		}
+		if (rest.getDishes() == null) {
+			throw new VendorServiceException("vendorService.DISH_NOT_FOUND");
+		}
+		// to check if dish is already present
+		Optional<Dish> dishOp = dishRepo.findById(dishDto.getDishId());
+		Dish dish = dishOp.orElseThrow(()->new VendorServiceException("vendorService.DISH_NOT_FOUND"));
+		
+		//rating should not be updated
+		dish.setDishCuisine(dishDto.getDishCuisine());
+		dish.setDishDescription(dishDto.getDishDescription());
+		dish.setDishName(dishDto.getDishName());
+		dish.setDishType(dishDto.getDishType());
+		dish.setImageUrl(dishDto.getImageUrl());
+		dish.setPrice(dishDto.getPrice());
+		dish.setSpeciality(dishDto.getSpeciality());
+
+		return environment.getProperty("vendorService.DISH_UPDATED_SUCCESS");
 	}
 }
