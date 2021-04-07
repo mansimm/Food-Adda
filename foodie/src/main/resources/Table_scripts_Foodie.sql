@@ -294,6 +294,7 @@ SELECT * FROM wallet;
 SELECT * FROM USER_LIKES;
 SELECT * FROM TABLE_BOOKING;
 
+alter table USER_LIKES rename to user_likes;
 ---update restaurant set approval_status="Pending" where restaurant_id=1;
 
 
