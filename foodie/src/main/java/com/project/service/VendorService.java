@@ -20,5 +20,8 @@ public interface VendorService {
 	
 	public String updateDish(String contactNumber, Integer restaurantId, DishDto dishDto)
 			throws UserServiceException, VendorServiceException;
+	
+	public String deleteDish(String contactNumber, Integer restaurantId, DishDto dishDto)
+			throws UserServiceException, VendorServiceException ;
 
 }

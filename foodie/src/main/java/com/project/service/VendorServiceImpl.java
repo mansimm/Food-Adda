@@ -255,4 +255,57 @@ public class VendorServiceImpl implements VendorService {
 
 		return environment.getProperty("vendorService.DISH_UPDATED_SUCCESS");
 	}
+	
+	@Override
+	public String deleteDish(String contactNumber, Integer restaurantId, DishDto dishDto)
+			throws UserServiceException, VendorServiceException {
+		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
+		Users user = op.orElseThrow(() -> new UserServiceException("vendorService.Invalid_USER_ROLE"));
+
+		if (user.getRoles() == null || user.getRoles().isEmpty()) {
+			throw new UserServiceException("vendorService.Invalid_USER_ROLE");
+		}
+		Boolean flag = false;
+		for (Roles role : user.getRoles()) {
+			if (role.getRoleType().equals(Role.VENDOR)) {
+				flag = true;
+			}
+		}
+		if (flag == false) {
+			throw new UserServiceException("vendorService.Invalid_USER_ROLE");
+		}
+
+		Optional<Restaurant> restOp = restaurantRepo.findById(restaurantId);
+		Restaurant rest = restOp.orElseThrow(() -> new VendorServiceException("vendorService.RESTAURANT_NOT_FOUND"));
+
+		//if registration is approved then only vendor can update
+		if (!rest.getApprovalStatus().equals(ApprovalStatus.Accepted.toString())) {
+			throw new VendorServiceException("vendorService.RESTAURANT_REGISTRATION_NOT_APPROVED");
+		}
+		if (rest.getDishes() == null) {
+			throw new VendorServiceException("vendorService.DISH_NOT_FOUND");
+		}
+		List<Dish> newDishes = new ArrayList();
+		boolean deleted=false;
+		for(Dish d:rest.getDishes())
+		{
+			if(d.getDishId().equals(dishDto.getDishId()))
+			{
+				//dont add
+				deleted=true;
+				
+			}
+			else
+			{
+				newDishes.add(d);
+			}
+		}
+		rest.setDishes(newDishes);
+		if(deleted==false)
+		{
+			throw new VendorServiceException("vendorService.DISH_NOT_FOUND");
+		}
+		dishRepo.deleteById(dishDto.getDishId());
+		return environment.getProperty("vendorService.DISH_DELETED_SUCCESS");
+	}
 }
