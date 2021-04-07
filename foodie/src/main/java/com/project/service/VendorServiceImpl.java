@@ -35,6 +35,7 @@ public class VendorServiceImpl implements VendorService {
 	@Autowired
 	SearchServiceImpl searchService;
 
+	@Override
 	public String registerRestaurant(RestaurantDto restaurantDto, String contactNumber)
 			throws UserServiceException, RestaurantNotFoundException, VendorServiceException {
 		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
@@ -127,5 +128,30 @@ public class VendorServiceImpl implements VendorService {
 
 		return environment.getProperty("vendorService.RESTAURANT_REGISTERED_SUCCESS");
 
+	}
+	@Override
+	public List<RestaurantDto> viewRestaurantAndMenu(String contactNumber) throws UserServiceException, RestaurantNotFoundException
+	{
+		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
+		Users user = op.orElseThrow(()->new UserServiceException("vendorService.Invalid_USER_ROLE"));
+		
+		if(user.getRoles()==null|| user.getRoles().isEmpty())
+		{
+			throw new UserServiceException("vendorService.Invalid_USER_ROLE");
+		}
+		Boolean flag = false;
+		for(Roles role: user.getRoles())
+		{
+			if(role.getRoleType().equals(Role.VENDOR))
+			{
+				flag=true;
+			}
+		}
+		if(flag==false)
+		{
+			throw new UserServiceException("vendorService.Invalid_USER_ROLE");
+		}
+		List<RestaurantDto> rest = searchService.getAllRestaurant();
+		return rest;
 	}
 }

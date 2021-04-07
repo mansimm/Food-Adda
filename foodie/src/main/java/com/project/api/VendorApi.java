@@ -1,5 +1,7 @@
 package com.project.api;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
@@ -8,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,5 +43,15 @@ public class VendorApi {
 	{
 		String success = vendorService.registerRestaurant(restaurantDto, contactNumber);
 		return new ResponseEntity(success,HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/viewRestaurantAndMenu/{contactNumber}")
+	public ResponseEntity<String> viewRestaurantAndMenu(
+			@PathVariable(value="contactNumber")
+			@Pattern(regexp="[6789][0-9]{9}",message="{UserValidator.INVALID_CONTACT_NUMBER_FORMAT}")
+			String contactNumber) throws UserServiceException, RestaurantNotFoundException, VendorServiceException
+	{
+		List<RestaurantDto> list = vendorService.viewRestaurantAndMenu(contactNumber);
+		return new ResponseEntity(list,HttpStatus.OK);
 	}
 }

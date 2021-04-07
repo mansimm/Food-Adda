@@ -317,6 +317,9 @@ http://localhost:4000/foodie/vendorAPI/registerRestaurant/8882039476
         }
     },
 
-
+**************************************************************************************************
+10) Vendor: View restaurant and menu
+#valid
+http://localhost:4000/foodie/vendorAPI/viewRestaurantAndMenu/8882039476
 
 
