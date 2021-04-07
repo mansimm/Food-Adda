@@ -322,4 +322,27 @@ http://localhost:4000/foodie/vendorAPI/registerRestaurant/8882039476
 #valid
 http://localhost:4000/foodie/vendorAPI/viewRestaurantAndMenu/8882039476
 
+**************************************************************************************************
+
+11) add,update,delete dish
+#valid body -
+ {
+                "dishName": "Chicken Burger",
+                "dishCuisine": "Burger",
+                "dishType": "Nonveg",
+                "dishDescription": "Spicy and chrunchy chicken tikki with soft bun with fresh lettuce and mustard sauce",
+                "price": 150.0,
+                "avgRating": 4.5,
+                "speciality": "Chef Special",
+                "imageUrl": "assets/chicken_burger.jpg"
+            }
+            
+#invalid -     "errorMessage": "Restaurant not found!",
+http://localhost:4000/foodie/vendorAPI/addDish/8875632142/100
+
+#valid -
+http://localhost:4000/foodie/vendorAPI/addDish/8875632142/9
+
+#invalid - "errorMessage": "Restaurant registration is pending or rejected, You cannot add dish.",
+http://localhost:4000/foodie/vendorAPI/addDish/8875632142/8
 

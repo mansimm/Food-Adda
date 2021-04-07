@@ -20,8 +20,10 @@ import com.project.exception.RestaurantNotFoundException;
 import com.project.exception.UserServiceException;
 import com.project.exception.VendorServiceException;
 import com.project.model.ApprovalStatus;
+import com.project.model.DishDto;
 import com.project.model.RestaurantDto;
 import com.project.model.Role;
+import com.project.repository.RestaurantRepo;
 import com.project.repository.UserRepo;
 
 @Service
@@ -30,6 +32,8 @@ public class VendorServiceImpl implements VendorService {
 
 	@Autowired
 	UserRepo userRepo;
+	@Autowired
+	RestaurantRepo restaurantRepo;
 	@Autowired
 	Environment environment;
 	@Autowired
@@ -90,8 +94,8 @@ public class VendorServiceImpl implements VendorService {
 		newRest.setAvgRating(restaurantDto.getAvgRating());
 		newRest.setCity(restaurantDto.getCity());
 
-		//cannot add dishes until restaurant registration is not approved
-		
+		// cannot add dishes until restaurant registration is not approved
+
 //		if (restaurantDto.getDishes() != null) {
 //			List<Dish> dishes = restaurantDto.getDishes().stream().map(x -> {
 //				Dish d = new Dish();
@@ -131,29 +135,79 @@ public class VendorServiceImpl implements VendorService {
 		return environment.getProperty("vendorService.RESTAURANT_REGISTERED_SUCCESS");
 
 	}
+
 	@Override
-	public List<RestaurantDto> viewRestaurantAndMenu(String contactNumber) throws UserServiceException, RestaurantNotFoundException
-	{
+	public List<RestaurantDto> viewRestaurantAndMenu(String contactNumber)
+			throws UserServiceException, RestaurantNotFoundException {
 		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
-		Users user = op.orElseThrow(()->new UserServiceException("vendorService.Invalid_USER_ROLE"));
-		
-		if(user.getRoles()==null|| user.getRoles().isEmpty())
-		{
+		Users user = op.orElseThrow(() -> new UserServiceException("vendorService.Invalid_USER_ROLE"));
+
+		if (user.getRoles() == null || user.getRoles().isEmpty()) {
 			throw new UserServiceException("vendorService.Invalid_USER_ROLE");
 		}
 		Boolean flag = false;
-		for(Roles role: user.getRoles())
-		{
-			if(role.getRoleType().equals(Role.VENDOR))
-			{
-				flag=true;
+		for (Roles role : user.getRoles()) {
+			if (role.getRoleType().equals(Role.VENDOR)) {
+				flag = true;
 			}
 		}
-		if(flag==false)
-		{
+		if (flag == false) {
 			throw new UserServiceException("vendorService.Invalid_USER_ROLE");
 		}
 		List<RestaurantDto> rest = searchService.getAllRestaurant();
 		return rest;
+	}
+
+	public String addDish(String contactNumber, Integer restaurantId, DishDto dishDto)
+			throws UserServiceException, VendorServiceException {
+		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
+		Users user = op.orElseThrow(() -> new UserServiceException("vendorService.Invalid_USER_ROLE"));
+
+		if (user.getRoles() == null || user.getRoles().isEmpty()) {
+			throw new UserServiceException("vendorService.Invalid_USER_ROLE");
+		}
+		Boolean flag = false;
+		for (Roles role : user.getRoles()) {
+			if (role.getRoleType().equals(Role.VENDOR)) {
+				flag = true;
+			}
+		}
+		if (flag == false) {
+			throw new UserServiceException("vendorService.Invalid_USER_ROLE");
+		}
+
+		Optional<Restaurant> restOp = restaurantRepo.findById(restaurantId);
+		Restaurant rest = restOp.orElseThrow(() -> new VendorServiceException("vendorService.RESTAURANT_NOT_FOUND"));
+		
+		if(!rest.getApprovalStatus().equals(ApprovalStatus.Accepted))
+		{
+			throw new VendorServiceException("vendorService.RESTAURANT_REGISTRATION_NOT_APPROVED");
+		}
+		//to check if dish is already present
+		for(Dish d:rest.getDishes())
+		{
+			if(d.getDishName().equalsIgnoreCase(dishDto.getDishName()))
+			{
+				throw new VendorServiceException("vendorService.DISH_ALREADY_PRESENT");
+			}
+		}
+		Dish dish = new Dish();
+		dish.setAvgRating(2.5);//rating should be 2.5 initial for all restaurants
+		dish.setDishCuisine(dishDto.getDishCuisine());
+		dish.setDishDescription(dishDto.getDishDescription());
+		dish.setDishName(dishDto.getDishName());
+		dish.setDishType(dishDto.getDishType());
+		dish.setImageUrl(dishDto.getImageUrl());
+		dish.setPrice(dishDto.getPrice());
+		dish.setSpeciality(dishDto.getSpeciality());
+		
+		if(rest.getDishes()==null)
+		{
+			List<Dish> dlist = new ArrayList();
+			rest.setDishes(dlist);
+		}
+		rest.getDishes().add(dish);
+		
+		return environment.getProperty("vendorService.DISH_ADDED_SUCCESS");
 	}
 }

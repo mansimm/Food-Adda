@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.exception.RestaurantNotFoundException;
 import com.project.exception.UserServiceException;
 import com.project.exception.VendorServiceException;
+import com.project.model.DishDto;
 import com.project.model.RestaurantDto;
 import com.project.service.VendorServiceImpl;
 
@@ -53,5 +54,20 @@ public class VendorApi {
 	{
 		List<RestaurantDto> list = vendorService.viewRestaurantAndMenu(contactNumber);
 		return new ResponseEntity(list,HttpStatus.OK);
+	}
+	
+	@PostMapping(value="/addDish/{contactNumber}/{restaurantId}")
+	public ResponseEntity<String> addDish(
+			@PathVariable(value="contactNumber")
+			@Pattern(regexp="[6789][0-9]{9}",message="{UserValidator.INVALID_CONTACT_NUMBER_FORMAT}")
+			String contactNumber,
+			@PathVariable(value="restaurantId")
+			Integer restaurantId,
+			@RequestBody
+			@Valid
+			DishDto dishDto) throws UserServiceException, RestaurantNotFoundException, VendorServiceException
+	{
+		String success = vendorService.addDish( contactNumber, restaurantId,  dishDto);
+		return new ResponseEntity(success,HttpStatus.OK);
 	}
 }
