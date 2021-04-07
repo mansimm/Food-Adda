@@ -24,7 +24,7 @@ public class RestaurantDto {
 	@Pattern(regexp="(Nonveg|Veg|Vegan|Other)",message="{RestaurantValidator.INVALID_RESTAURANT_TYPE}")
 	private String restaurantType;
 	
-	@Pattern(regexp="[A-Za-z ,0-9]",message="{RestaurantValidator.INVALID_RESTAURANT_ADDRESSLINE1}")
+	@Pattern(regexp="[A-Za-z ,0-9]+",message="{RestaurantValidator.INVALID_RESTAURANT_ADDRESSLINE1}")
 	private String addressLine1;
 	
 	@Pattern(regexp="[a-zA-Z ]+",message="{RestaurantValidator.INVALID_RESTAURANT_AREA}")
@@ -36,7 +36,8 @@ public class RestaurantDto {
 	@Pattern(regexp="[a-zA-Z]+",message="{RestaurantValidator.INVALID_RESTAURANT_STATE}")
 	private String resState;
 	
-	@Pattern(regexp="[0-9]{6}",message="{RestaurantValidator.INVALID_RESTAURANT_PIN}")
+	@Min(value=100000,message="{RestaurantValidator.INVALID_RESTAURANT_PIN}")
+	@Max(value=999999,message="{RestaurantValidator.INVALID_RESTAURANT_PIN}")
 	private Integer pincode;
 	
 	private String approvalStatus;
@@ -45,6 +46,7 @@ public class RestaurantDto {
 	@Max(value=5,message="{RestaurantValidator.INVALID_RESTAURANT_RATING}")
 	private double avgRating;
 	
+	@NotNull(message="{RestaurantValidator.INVALID_RESTAURANT_DISH_NULL}")
 	@Valid
 	private List<DishDto> dishes;
 	private List<String> photoUrls;

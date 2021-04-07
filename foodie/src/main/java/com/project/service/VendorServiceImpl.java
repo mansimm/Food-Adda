@@ -1,15 +1,131 @@
 package com.project.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+
+import com.project.entity.Dish;
+import com.project.entity.Restaurant;
+import com.project.entity.RestaurantTransaction;
+import com.project.entity.Roles;
+import com.project.entity.Users;
+import com.project.exception.RestaurantNotFoundException;
+import com.project.exception.UserServiceException;
+import com.project.exception.VendorServiceException;
+import com.project.model.ApprovalStatus;
+import com.project.model.RestaurantDto;
+import com.project.model.Role;
+import com.project.repository.UserRepo;
 
 @Service
 @Transactional
 public class VendorServiceImpl implements VendorService {
 
-	public void registerRestaurant()
-	{
-		
+	@Autowired
+	UserRepo userRepo;
+	@Autowired
+	Environment environment;
+	@Autowired
+	SearchServiceImpl searchService;
+
+	public String registerRestaurant(RestaurantDto restaurantDto, String contactNumber)
+			throws UserServiceException, RestaurantNotFoundException, VendorServiceException {
+		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
+		Users user = op.orElseThrow(() -> new UserServiceException("orderService.NO_USER_FOUND"));
+
+		if (user.getRoles() == null || user.getRoles().isEmpty()) {
+			throw new UserServiceException("vendorService.Invalid_USER_ROLE");
+		}
+		Boolean flag = false;
+		for (Roles role : user.getRoles()) {
+			if (role.getRoleType().equals(Role.VENDOR)) {
+				flag = true;
+			}
+		}
+		if (flag == false) {
+			throw new UserServiceException("vendorService.Invalid_USER_ROLE");
+		}
+		// to get all the users
+		Iterable<Users> usersIt = userRepo.findAll();
+		List<Users> users = new ArrayList();
+		usersIt.forEach(x -> {
+			users.add(x);
+		});
+		if (users.isEmpty()) {
+			throw new UserServiceException("orderService.NO_USER_FOUND");
+		}
+
+		// check if restaurant is already registered or not
+		for (Users u : users) {
+			if (u.getUserId() == user.getUserId()) {
+				List<Restaurant> rest = u.getRestaurants();
+				for (Restaurant r : rest) {
+					if (r.getRestaurantName().equalsIgnoreCase(restaurantDto.getRestaurantName())
+							&& restaurantDto.getRestaurantContact().equals(r.getRestaurantContact())) {
+						throw new VendorServiceException("vendorService.RESTAURANT_ALREADY_REGISTERED_BY_YOU");
+					}
+				}
+			} else {
+				List<Restaurant> rest = u.getRestaurants();
+				for (Restaurant r : rest) {
+					if (r.getRestaurantName().equalsIgnoreCase(restaurantDto.getRestaurantName())) {
+						throw new VendorServiceException("vendorService.RESTAURANT_ALREADY_REGISTERED_BY_OTHER_VENDOR");
+					}
+				}
+			}
+		}
+
+		Restaurant newRest = new Restaurant();
+		newRest.setAddressLine1(restaurantDto.getAddressLine1());
+		newRest.setApprovalStatus(ApprovalStatus.Pending.toString());
+		newRest.setArea(restaurantDto.getArea());
+		newRest.setAvgRating(restaurantDto.getAvgRating());
+		newRest.setCity(restaurantDto.getCity());
+
+		if (restaurantDto.getDishes() != null) {
+			List<Dish> dishes = restaurantDto.getDishes().stream().map(x -> {
+				Dish d = new Dish();
+				d.setAvgRating(x.getAvgRating());
+				d.setDishCuisine(x.getDishCuisine());
+				d.setDishDescription(x.getDishDescription());
+				d.setDishName(x.getDishName());
+				d.setDishType(x.getDishType());
+				d.setImageUrl(x.getImageUrl());
+				d.setPrice(x.getPrice());
+				d.setSpeciality(x.getSpeciality());
+				return d;
+			}).collect(Collectors.toList());
+			newRest.setDishes(dishes);
+		}
+		String arr = "";
+		for (String url : restaurantDto.getPhotoUrls()) {
+			arr = arr + url + "-";
+		}
+		newRest.setPhotoUrls(arr.substring(0, arr.length() - 2));
+		newRest.setPincode(restaurantDto.getPincode());
+		newRest.setResState(restaurantDto.getResState());
+		newRest.setRestaurantContact(restaurantDto.getRestaurantContact());
+		newRest.setRestaurantName(restaurantDto.getRestaurantName());
+		newRest.setRestaurantType(restaurantDto.getRestaurantType());
+
+		if (restaurantDto.getTransaction() != null) {
+			RestaurantTransaction t = new RestaurantTransaction();
+			t.setRestaurantApproxCost(restaurantDto.getTransaction().getRestaurantApproxCost());
+			t.setRestaurantOrderCounter(restaurantDto.getTransaction().getRestaurantOrderCounter());
+			t.setRestaurantStatus(restaurantDto.getTransaction().getRestaurantStatus());
+			newRest.setTransaction(t);
+		}
+		user.getRestaurants().add(newRest);
+		userRepo.save(user);
+
+		return environment.getProperty("vendorService.RESTAURANT_REGISTERED_SUCCESS");
+
 	}
 }

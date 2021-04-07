@@ -191,3 +191,132 @@ http://localhost:4000/foodie/adminAPI/rejectRegistrationRequest/9476888203
 *******************************************************************************************
 8)Admin: Low rating restaurant
 http://localhost:4000/foodie/adminAPI/viewLowRatingRestaurants/9476888203
+
+
+
+*********************************************************************************************
+VendorApi
+9)Vendor: Register restaurant
+#Valid input body
+ {
+       
+        "restaurantName": "KFC",
+        "restaurantContact": "8934217843",
+        "restaurantType": "Nonveg",
+        "addressLine1": "3, Gajanan Nagar",
+        "area": "Kothrud",
+        "city": "Pune",
+        "resState": "Maharashtra",
+        "pincode": 411038,
+        "approvalStatus": "Accepted",
+        "avgRating": 4.2,
+        "dishes": [
+            {
+               
+                "dishName": "Chicken Burger",
+                "dishCuisine": "Burger",
+                "dishType": "Nonveg",
+                "dishDescription": "Spicy and chrunchy chicken tikki with soft bun with fresh lettuce and mustard sauce",
+                "price": 150.0,
+                "avgRating": 4.5,
+                "speciality": "Chef Special",
+                "imageUrl": "assets/chicken_burger.jpg"
+            },
+            {
+                "dishId": 1007,
+                "dishName": "Chicken Cheese Burger",
+                "dishCuisine": "Burger",
+                "dishType": "Nonveg",
+                "dishDescription": "Spicy and chrunchy chicken tikki with soft bun with fresh lettuce and extra cheese",
+                "price": 200.0,
+                "avgRating": 4.2,
+                "speciality": "Chef Special",
+                "imageUrl": "assets/chicken_cheese_burger.jpg"
+            },
+            {
+                
+                "dishName": "Chicken Wings",
+                "dishCuisine": "chicken",
+                "dishType": "Nonveg",
+                "dishDescription": "Spicy and chrunchy chicken wings",
+                "price": 550.0,
+                "avgRating": 4.6,
+                "speciality": "Chef Special",
+                "imageUrl": "assets/chicken_wings.jpg"
+            },
+            {
+                
+                "dishName": "French Fries",
+                "dishCuisine": "Fries",
+                "dishType": "Veg",
+                "dishDescription": "Classic crunchy and tasty french fries",
+                "price": 200.0,
+                "avgRating": 4.5,
+                "speciality": "Chef Special",
+                "imageUrl": "assets/french_fries.jpg"
+            }
+        ],
+        "photoUrls": [
+            "assets/kfcb1.jpg",
+            "assets/kfcb2.jpg",
+            "assets/kfcb3.jpg"
+        ],
+        "transaction": {
+            "restaurantOrderCounter": 1,
+            "restaurantApproxCost": 500,
+            "restaurantStatus": false
+        }
+    }
+
+#invalid - not a vendor
+http://localhost:4000/foodie/vendorAPI/registerRestaurant/9476888203
+
+#invalid - "errorMessage": "Restaurant is already registered by you, You can again register with another contact number!",
+http://localhost:4000/foodie/vendorAPI/registerRestaurant/8875632142
+
+#Valid-above body with diff contact number for restaurant
+http://localhost:4000/foodie/vendorAPI/registerRestaurant/8875632142
+
+
+#Invalid -"errorMessage": "Restaurant is already registered by other vendor!",
+http://localhost:4000/foodie/vendorAPI/registerRestaurant/8882039476
+ {
+       
+        "restaurantName": "KFC",
+        "restaurantContact": "8934217845",
+        "restaurantType": "Nonveg",
+        "addressLine1": "3, Gajanan Nagar",
+        "area": "Kothrud",
+        "city": "Pune",
+        "resState": "Maharashtra",
+        "pincode": 411038,
+        "approvalStatus": "Accepted",
+        "avgRating": 4.2,
+        "dishes":[
+            {
+               
+                "dishName": "Farmhouse Pizza",
+                "dishCuisine": "Pizza",
+                "dishType": "Veg",
+                "dishDescription": "Pizza topped with fresh green olives, tomatoes and onions",
+                "price": 400.0,
+                "avgRating": 3.8,
+                "speciality": "Chef Special",
+                "imageUrl": "assets/farmhouse_pizza.jpg"
+            }
+        ]
+        ,
+        "photoUrls": [
+            "assets/kfcb1.jpg",
+            "assets/kfcb2.jpg"
+        ],
+        "transaction": {
+            "restaurantOrderCounter": 1,
+            "restaurantApproxCost": 500,
+            "restaurantStatus": false
+        }
+    },
+
+
+
+
