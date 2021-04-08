@@ -34,6 +34,7 @@ import com.project.model.UsersDto;
 import com.project.model.ViewOrdersDto;
 import com.project.repository.UserRepo;
 import com.project.repository.AddressRepo;
+import com.project.repository.DishRepo;
 import com.project.repository.RestaurantRepo;
 
 
@@ -44,6 +45,8 @@ public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	UserRepo userRepo;
 	@Autowired
+	DishRepo dishRepo;
+	@Autowired
 	RestaurantRepo restaurantRepo;
 	@Autowired
 	AddressRepo addressRepo;
@@ -51,7 +54,7 @@ public class CustomerServiceImpl implements CustomerService {
 	Environment environment;
 	
 	@Override
-	public Orders placeOrder(List<OrderItemsDto> orderItemsList,String contactNumber) throws UserServiceException
+	public Orders placeOrder(List<OrderItemsDto> orderItemsList,String contactNumber,Integer restaurantId) throws UserServiceException
 	{
 		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
 		Users user = op.orElseThrow(()->new UserServiceException("orderService.NO_USER_FOUND"));
@@ -60,27 +63,27 @@ public class CustomerServiceImpl implements CustomerService {
 		{
 			throw  new UserServiceException("orderService.NO_ORDER_FOUND");
 		}
-		List<OrderItems> orderItemsEntityList;
-		orderItemsEntityList = orderItemsList.stream().map(x->{
+		List<OrderItems> orderItemsEntityList = new ArrayList<OrderItems>();
+		for(OrderItemsDto x:orderItemsList)
+		{
 			OrderItems orderItem = new OrderItems();
 			orderItem.setQty(x.getQty());
-			Dish dish = new Dish();
-			dish.setAvgRating(x.getDish().getAvgRating());
-			dish.setDishCuisine(x.getDish().getDishCuisine());
-			dish.setDishDescription(x.getDish().getDishDescription());
-			dish.setDishName(x.getDish().getDishName());
-			dish.setDishType(x.getDish().getDishType());
-			dish.setImageUrl(x.getDish().getImageUrl());
-			dish.setPrice(x.getDish().getPrice());
-			dish.setSpeciality(x.getDish().getSpeciality());
-			orderItem.setDish(dish);
-			return orderItem;
-		}).collect(Collectors.toList());
+			
+			//check if dish present 
+			Optional<Dish> opDish = dishRepo.findById(x.getDish().getDishId());
+			Dish addDish = opDish.orElseThrow(()->new UserServiceException("CustomerService.Dish_NOT_FOUND"));
+			orderItem.setDish(addDish);
+			
+			orderItemsEntityList.add(orderItem);
+		}
 		
 		Orders Orders = new Orders();
 		Orders.setOrderItemsList(orderItemsEntityList);
 		Orders.setOrderStatus(OrderStatus.ACTIVE.toString());
 		Orders.setOrderBill(calculateOrderBill(orderItemsEntityList));
+		Restaurant r = new Restaurant();
+		r = restaurantRepo.findById(restaurantId).orElseThrow(()-> new UserServiceException("CustomerService.RESTAURANT_NOT_FOUND"));
+		Orders.setRestaurant(r);
 		
 		if(user.getOrdersList()== null)
 		{
@@ -105,7 +108,6 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 		return bill.intValue();
 	}
-	//veiw resturant name remaining
 	@Override
 	public List<ViewOrdersDto> viewOrder(String contactNumber) throws UserServiceException
 	{		
@@ -134,8 +136,10 @@ public class CustomerServiceImpl implements CustomerService {
 				return orderItemsDto;
 			}).collect(Collectors.toList());
 			viewOrder.setOrderItems(orderItemsDtoList);
-			//viewOrder.setRestaurantName(searchRepo.findRestaurantNameByDishesDishId(orderItems.get(0).getDish().getDishId()));
-			//System.out.println("\n @@@@ result == "+searchRepo.findRestaurantNameByDishesDish(orderItems.get(0).getDish()));
+			if(x.getRestaurant()!=null)
+			{
+				viewOrder.setRestaurantName(x.getRestaurant().getRestaurantName());
+			}
 			return viewOrder;
 		}).collect(Collectors.toList());
 		return viewOrdersList;

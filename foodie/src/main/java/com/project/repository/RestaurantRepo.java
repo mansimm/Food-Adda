@@ -13,5 +13,6 @@ public interface RestaurantRepo extends CrudRepository<Restaurant,Integer>{
 	///@Query("select r.restaurantName from Restaurant r where r.dishes.get(0).getDishId()=dishId")
 	//public String findRestaurantNameByDishesDish(Dish dish);
 	public List<Restaurant> getAllRestaurantByArea(String area);
+	public String findRestaurantNameByRestaurantId(Integer restaurantId);
 
 }

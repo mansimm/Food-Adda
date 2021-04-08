@@ -161,7 +161,7 @@ public class AdminServiceImpl implements AdminService {
 		}
 		return lowRatingRest;
 	}
-	//not working
+	@Override
 	public String deleteLowRatingRestaurant(RestaurantDto restaurantDto,String contactNumber) throws UserServiceException, AdminServiceException
 	{
 		Optional<Users> op = userRepo.findByContactNumber(contactNumber);

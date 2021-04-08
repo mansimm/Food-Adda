@@ -2,14 +2,22 @@ package com.project.model;
 
 import java.util.List;
 
+
 public class OrdersDto {
 
 	private Integer orderId;
 	private Integer orderBill;
 	private String orderStatus;
 	private List<OrderItemsDto> orderItemsList;
+	private RestaurantDto restaurantDto;
+
 	
-	
+	public RestaurantDto getRestaurantDto() {
+		return restaurantDto;
+	}
+	public void setRestaurantDto(RestaurantDto restaurantDto) {
+		this.restaurantDto = restaurantDto;
+	}
 	public Integer getOrderId() {
 		return orderId;
 	}

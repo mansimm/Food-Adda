@@ -31,7 +31,8 @@ http://localhost:4000/foodie/userAPI/register
 
 ***********************************************************************************************
 
-3) Login
+							3) Login
+							
 http://localhost:4000/foodie/userAPI/login
 #input-invalid
 
@@ -48,46 +49,33 @@ http://localhost:4000/foodie/userAPI/login
 
 ***********************************************************************************************
 
-3)Place order
+							3) Place order
 #invalid - no user found
-http://localhost:4000/foodie/customerAPI/placeOrder/9234567899
+http://localhost:4000/foodie/customerAPI/placeOrder/9234567899/8
 #Valid
-http://localhost:4000/foodie/customerAPI/placeOrder/8884967823
-
+http://localhost:4000/foodie/customerAPI/placeOrder/8882039476/8
 #body
-{
-    "orderId": null,
-    "orderBill": 150,
-    "orderStatus": "Placed",
-    "orderItemsList": [
+[
         {
             "orderItemsId": null,
             "dish": {
-                "dishId": null,
-                "dishName": "Chicken Burger",
-                "dishCuisine": "Burger",
-                "dishType": "Nonveg",
-                "dishDescription": "Spicy and chrunchy chicken tikki in soft bun with fresh lettuce and mustard sauce",
-                "price": 150.0,
-                "avgRating": 4.5,
-                "speciality": "Chef Special",
-                "imageUrl": "assets/chicken_burger.jpg"
+                "dishId": 1025
             },
             "qty": 1
         }
-    ]
-}
+]
 
 ***********************************************************************************************
 
-4)View Order
+						4) View Order
 #Valid
-http://localhost:4000/foodie/customerAPI/viewOrder/8875632142
+http://localhost:4000/foodie/customerAPI/viewOrder/8882039476
 
 #invalid - no user found
 http://localhost:4000/foodie/customerAPI/viewOrder/8875632141
 
-5)view nearby restourants
+**********************************************************************************************
+						5) view nearby restourants
 #find by area of customer
 http://localhost:4000/foodie/customerAPI/viewNearbyRestaurant/9880253413/noarea
 #if customer have multiple address then use selected area
@@ -97,7 +85,8 @@ http://localhost:4000/foodie/customerAPI/viewNearbyRestaurant/8875632142/Baner
 
 ***********************************************************************************************
 
-6) view all address 
+						6) view all address 
+						
 #invalid - role other than customer - Sorry! You are not customer.
 http://localhost:4000/foodie/customerAPI/viewAllAddresses/8875632142
 #Valid

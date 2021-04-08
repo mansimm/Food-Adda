@@ -38,18 +38,21 @@ public class CustomerApi {
 	@Autowired
 	CustomerServiceImpl customerService;
 	
-	@PostMapping(value="/placeOrder/{contactNumber}")
+	@PostMapping(value="/placeOrder/{contactNumber}/{restaurantId}")
 	public ResponseEntity<Orders> placeOrder(
 			@PathVariable(value="contactNumber")
 			@Pattern(regexp="[6789][0-9]{9}",message="{UserValidator.INVALID_CONTACT_NUMBER_FORMAT}") 
 			String contactNumber,
+			@NotNull
+			@PathVariable(value="restaurantId")
+			Integer restaurantId,
 			@RequestBody List<OrderItemsDto> orderItemsList) throws UserServiceException
 	{
-		Orders orders = customerService.placeOrder(orderItemsList, contactNumber);
+		Orders orders = customerService.placeOrder(orderItemsList, contactNumber,restaurantId);
 		return new ResponseEntity(orders,HttpStatus.OK);
 	}
 	
-	@PostMapping(value="/viewOrder/{contactNumber}")
+	@GetMapping(value="/viewOrder/{contactNumber}")
 	public ResponseEntity<ViewOrdersDto> viewOrder(
 			@PathVariable(value="contactNumber")
 			@Pattern(regexp="[6789][0-9]{9}",message="{UserValidator.INVALID_CONTACT_NUMBER_FORMAT}") 

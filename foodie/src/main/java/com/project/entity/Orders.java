@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -22,7 +23,17 @@ public class Orders {
 	@OneToMany(cascade= CascadeType.ALL)
 	@JoinColumn(name = "order_id")
 	private List<OrderItems> orderItemsList;
+	@ManyToOne
+	@JoinColumn(name = "restaurant_id")
+	private Restaurant restaurant;
+
 	
+	public Restaurant getRestaurant() {
+		return restaurant;
+	}
+	public void setRestaurant(Restaurant restaurant) {
+		this.restaurant = restaurant;
+	}
 	public Integer getOrderId() {
 		return orderId;
 	}

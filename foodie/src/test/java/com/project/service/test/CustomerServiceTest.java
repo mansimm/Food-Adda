@@ -26,6 +26,7 @@ import com.project.service.CustomerServiceImpl;
 @SpringBootTest
 public class CustomerServiceTest {
 
+	//rewrte tests again changes made in service methods
 	@Mock
 	UserRepo userRepo;
 	@InjectMocks
@@ -36,9 +37,10 @@ public class CustomerServiceTest {
 	{
 		List<OrderItemsDto> orderItemsList= new ArrayList();
 		String contactNumber = "9234567890";
+		Integer restaurantId = 1;
 		
 		Mockito.when(userRepo.findByContactNumber(contactNumber)).thenReturn(Optional.ofNullable(null));
-		Exception e = Assertions.assertThrows(UserServiceException.class, ()->customerService.placeOrder(orderItemsList, contactNumber));
+		Exception e = Assertions.assertThrows(UserServiceException.class, ()->customerService.placeOrder(orderItemsList, contactNumber,restaurantId));
 		Assertions.assertEquals("orderService.NO_USER_FOUND", e.getMessage());
 	}
 	
@@ -60,9 +62,10 @@ public class CustomerServiceTest {
 
 		rolesEntity.add(roleEntity);
 		userEntity.setRoles(rolesEntity);
+		Integer restaurantId=1;
 		
 		Mockito.when(userRepo.findByContactNumber(contactNumber)).thenReturn(Optional.ofNullable(userEntity));
-		Exception e = Assertions.assertThrows(UserServiceException.class, ()->customerService.placeOrder(orderItemsList, contactNumber));
+		Exception e = Assertions.assertThrows(UserServiceException.class, ()->customerService.placeOrder(orderItemsList, contactNumber,restaurantId));
 		Assertions.assertEquals("orderService.NO_ORDER_FOUND", e.getMessage());
 	}
 	
@@ -116,9 +119,10 @@ public class CustomerServiceTest {
 
 		rolesEntity.add(roleEntity);
 		userEntity.setRoles(rolesEntity);
+		Integer restaurantId =1;
 		
 		Mockito.when(userRepo.findByContactNumber(contactNumber)).thenReturn(Optional.ofNullable(userEntity));
-		Orders order = customerService.placeOrder(orderItemsList, contactNumber);
+		Orders order = customerService.placeOrder(orderItemsList, contactNumber,restaurantId);
 		Assertions.assertNotNull(order);
 	}
 }
