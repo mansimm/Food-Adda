@@ -14,21 +14,27 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.project.entity.Dish;
 import com.project.entity.OrderItems;
 import com.project.entity.Orders;
+import com.project.entity.Restaurant;
 import com.project.entity.Roles;
 import com.project.entity.Users;
 import com.project.exception.UserServiceException;
 import com.project.model.DishDto;
 import com.project.model.OrderItemsDto;
 import com.project.model.Role;
+import com.project.repository.DishRepo;
+import com.project.repository.RestaurantRepo;
 import com.project.repository.UserRepo;
 import com.project.service.CustomerServiceImpl;
 
 @SpringBootTest
 public class CustomerServiceTest {
 
-	//rewrte tests again changes made in service methods
 	@Mock
 	UserRepo userRepo;
+	@Mock
+	DishRepo dishRepo;
+	@Mock
+	RestaurantRepo restaurantRepo;
 	@InjectMocks
 	CustomerServiceImpl customerService = new CustomerServiceImpl();
 	
@@ -40,6 +46,10 @@ public class CustomerServiceTest {
 		Integer restaurantId = 1;
 		
 		Mockito.when(userRepo.findByContactNumber(contactNumber)).thenReturn(Optional.ofNullable(null));
+		Mockito.when(dishRepo.findById(1111)).thenReturn(Optional.ofNullable(null));
+		Mockito.when(restaurantRepo.findById(restaurantId)).thenReturn(Optional.ofNullable(null));
+
+		
 		Exception e = Assertions.assertThrows(UserServiceException.class, ()->customerService.placeOrder(orderItemsList, contactNumber,restaurantId));
 		Assertions.assertEquals("orderService.NO_USER_FOUND", e.getMessage());
 	}
@@ -65,6 +75,9 @@ public class CustomerServiceTest {
 		Integer restaurantId=1;
 		
 		Mockito.when(userRepo.findByContactNumber(contactNumber)).thenReturn(Optional.ofNullable(userEntity));
+		Mockito.when(dishRepo.findById(1111)).thenReturn(Optional.ofNullable(null));
+		Mockito.when(restaurantRepo.findById(restaurantId)).thenReturn(Optional.ofNullable(null));
+
 		Exception e = Assertions.assertThrows(UserServiceException.class, ()->customerService.placeOrder(orderItemsList, contactNumber,restaurantId));
 		Assertions.assertEquals("orderService.NO_ORDER_FOUND", e.getMessage());
 	}
@@ -88,6 +101,43 @@ public class CustomerServiceTest {
 	}
 	
 	@Test
+	public void placeOrderDishNotFound() throws UserServiceException
+	{
+		List<OrderItemsDto> orderItemsList= new ArrayList();
+		String contactNumber = "9234567890";
+		OrderItemsDto orderItemsDto = new OrderItemsDto();
+		orderItemsDto.setOrderItemsId(101);
+		orderItemsDto.setQty(3);
+		DishDto dish = new DishDto();
+		dish.setDishId(1111);
+		orderItemsDto.setDish(dish);
+		orderItemsList.add(orderItemsDto);
+		
+		Users userEntity = new Users();
+		userEntity.setContactNumber("9876543210");
+		userEntity.setEmailId("mansi@gmail.com");
+		userEntity.setUserName("mansi");
+		userEntity.setPassword("Mansi@13");
+		List<Roles> rolesEntity = new ArrayList<Roles>();
+		Roles roleEntity = new Roles();
+		roleEntity.setRoleType(Role.VENDOR);
+		roleEntity.setRoleId(1);
+
+		rolesEntity.add(roleEntity);
+		userEntity.setRoles(rolesEntity);
+		Integer restaurantId =1;
+				
+		Restaurant r = new Restaurant();
+		r.setRestaurantName("KFC");
+		
+		Mockito.when(userRepo.findByContactNumber(contactNumber)).thenReturn(Optional.ofNullable(userEntity));
+		Mockito.when(dishRepo.findById(1111)).thenReturn(Optional.ofNullable(null));
+		Mockito.when(restaurantRepo.findById(restaurantId)).thenReturn(Optional.ofNullable(r));
+
+		Exception e = Assertions.assertThrows(UserServiceException.class, ()->customerService.placeOrder(orderItemsList, contactNumber,restaurantId));
+		Assertions.assertEquals("CustomerService.Dish_NOT_FOUND", e.getMessage());
+	}
+	@Test
 	public void placeOrderValid() throws UserServiceException
 	{
 		List<OrderItemsDto> orderItemsList= new ArrayList();
@@ -96,14 +146,8 @@ public class CustomerServiceTest {
 		orderItemsDto.setOrderItemsId(101);
 		orderItemsDto.setQty(3);
 		DishDto dish = new DishDto();
-		dish.setAvgRating(5.0);
-		dish.setDishCuisine("Burger");
-		dish.setDishDescription("Spicy and chrunchy chicken tikki in soft bun with fresh lettuce and mustard sauce");
-		dish.setDishName("Chicken Burger");
-		dish.setDishType("Nonveg");
-		dish.setImageUrl("url");
-		dish.setPrice(100.0);
-		dish.setSpeciality("special");
+		dish.setDishId(1111);
+
 		orderItemsDto.setDish(dish);
 		orderItemsList.add(orderItemsDto);
 		
@@ -121,7 +165,26 @@ public class CustomerServiceTest {
 		userEntity.setRoles(rolesEntity);
 		Integer restaurantId =1;
 		
+		Dish dishEntity = new Dish();
+		dishEntity.setDishId(1111);
+		dishEntity.setAvgRating(5.0);
+		dishEntity.setDishCuisine("Burger");
+		dishEntity.setDishDescription("Spicy and chrunchy chicken tikki in soft bun with fresh lettuce and mustard sauce");
+		dishEntity.setDishName("Chicken Burger");
+		dishEntity.setDishType("Nonveg");
+		dishEntity.setImageUrl("url");
+		dishEntity.setPrice(100.0);
+		dishEntity.setSpeciality("special");
+		orderItemsDto.setDish(dish);
+		orderItemsList.add(orderItemsDto);
+		
+		Restaurant r = new Restaurant();
+		r.setRestaurantName("KFC");
+		
 		Mockito.when(userRepo.findByContactNumber(contactNumber)).thenReturn(Optional.ofNullable(userEntity));
+		Mockito.when(dishRepo.findById(1111)).thenReturn(Optional.ofNullable(dishEntity));
+		Mockito.when(restaurantRepo.findById(restaurantId)).thenReturn(Optional.ofNullable(r));
+
 		Orders order = customerService.placeOrder(orderItemsList, contactNumber,restaurantId);
 		Assertions.assertNotNull(order);
 	}
