@@ -15,6 +15,7 @@ public class RestaurantTransaction {
 	private Integer restaurantOrderCounter;
 	private Integer restaurantApproxCost;
 	private Boolean restaurantStatus;
+
 	
 	public Integer getRestaurantTransactionId() {
 		return restaurantTransactionId;

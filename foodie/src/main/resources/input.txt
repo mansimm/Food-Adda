@@ -161,7 +161,8 @@ http://localhost:4000/foodie/customerAPI/deleteAddress/8882039476
     }
 
 ***********************************************************************************************
-7) Admin view all restaurants
+					7) Admin view all restaurants
+					
 #invalid - no user found 
 http://localhost:4000/foodie/adminAPI/viewAllRegistrationRequests/9880253411
 #invalid - not an admin
@@ -189,9 +190,14 @@ http://localhost:4000/foodie/adminAPI/rejectRegistrationRequest/9476888203
 #same cases as above
 
 *******************************************************************************************
-8)Admin: Low rating restaurant
-http://localhost:4000/foodie/adminAPI/viewLowRatingRestaurants/9476888203
+							8)Admin: delete Low rating restaurant
 
+#valid -
+http://localhost:4000/foodie/adminAPI/deleteLowRatingRestaurant/9476888203
+#body -
+{
+        "restaurantId": 1
+}
 
 
 *********************************************************************************************
@@ -362,3 +368,6 @@ http://localhost:4000/foodie/vendorAPI/updateDish/8875632142/2
                 "speciality": "Chef Special",
                 "imageUrl": "assets/vada_pav.jpg"
             }
+            
+            
+

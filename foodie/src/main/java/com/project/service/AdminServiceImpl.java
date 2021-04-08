@@ -12,6 +12,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.project.entity.Restaurant;
+import com.project.entity.RestaurantTransaction;
 import com.project.entity.Roles;
 import com.project.entity.Dish;
 import com.project.entity.Users;
@@ -22,9 +23,13 @@ import com.project.model.ApprovalStatus;
 import com.project.model.RestaurantDto;
 import com.project.model.Role;
 import com.project.repository.RestaurantRepo;
+import com.project.repository.RestaurantTransactionRepo;
+import com.project.repository.TableBookingRepo;
 import com.project.repository.UserRepo;
 import com.project.repository.DishRatingRepo;
 import com.project.repository.DishRepo;
+import com.project.repository.OrderItemsRepo;
+import com.project.repository.OrdersRepo;
 
 @Service
 @Transactional
@@ -35,7 +40,15 @@ public class AdminServiceImpl implements AdminService {
 	@Autowired
 	UserRepo userRepo;
 	@Autowired
-	DishRatingRepo dishRatingRepo;
+	DishRepo dishRepo;
+	@Autowired
+	OrdersRepo OrdersRepo;
+	@Autowired
+	RestaurantTransactionRepo restaurantTransactionRepo;
+	@Autowired
+	OrderItemsRepo orderItemsRepo;
+	@Autowired
+	TableBookingRepo tableBookingRepo;
 	@Autowired
 	SearchServiceImpl searchService;
 	@Autowired
@@ -149,7 +162,7 @@ public class AdminServiceImpl implements AdminService {
 		return lowRatingRest;
 	}
 	//not working
-	public String deleteLowRatingRestaurant(RestaurantDto restaurantDto,String contactNumber) throws UserServiceException
+	public String deleteLowRatingRestaurant(RestaurantDto restaurantDto,String contactNumber) throws UserServiceException, AdminServiceException
 	{
 		Optional<Users> op = userRepo.findByContactNumber(contactNumber);
 		Users user = op.orElseThrow(()->new UserServiceException("AdminService.NO_USER_FOUND"));
@@ -170,16 +183,7 @@ public class AdminServiceImpl implements AdminService {
 		{
 			throw new UserServiceException("AdminService.Invalid_USER_ROLE");
 		}
-		//get all users
-		Iterable<Users> opuser = userRepo.findAll();
-		List<Users> users=new ArrayList();
-		opuser.forEach(x->{
-			users.add(x);
-		});
-		if(users.isEmpty())
-		{
-			throw new UserServiceException("AdminService.NO_USER_FOUND");
-		}
+		
 		//get all users from db
 		Iterable<Users> opAllUser = userRepo.findAll();
 		List<Users> allUser = new ArrayList();
@@ -191,25 +195,51 @@ public class AdminServiceImpl implements AdminService {
 			throw new UserServiceException("AdminService.NO_USER_FOUND");
 		}
 		List<Restaurant> newRest = new ArrayList();
-		System.out.println("User rest i s==="+allUser);
-		allUser.stream().forEach(z->{
-			z.getRestaurants().stream().forEach(x->{
-				if(x.getRestaurantId() == restaurantDto.getRestaurantId())
+		
+		boolean found = false;
+		for(Users u : allUser)
+		{
+			for(Restaurant r : u.getRestaurants())
+			{
+				if(r.getRestaurantId().equals(restaurantDto.getRestaurantId()))
 				{
-					x.getDishes().forEach(y->{
-						dishRatingRepo.deleteByDish(y);
-					});
+					if(r.getAvgRating()>=1.5)
+					{
+						throw new AdminServiceException("AdminService.RESTAURANT_NOT_LOW_RATED");
+					}
+					
+					tableBookingRepo.deleteByRestaurant(r);
+					//delete all transactions
+					if(r.getTransaction()!=null)
+					{
+						restaurantTransactionRepo.deleteByRestaurantTransactionId(r.getTransaction().getRestaurantTransactionId());
+					}
+					if(r.getDishes()!=null)
+					{
+						//delete all order items for dishes
+						r.getDishes().stream().forEach(x->{
+							orderItemsRepo.deleteByDish(x);
+						});
+						//delete all dishes
+						for(Dish d:r.getDishes())
+						{
+							dishRepo.deleteByDishId(d.getDishId());
+						}
+					}
+					found = true;
 				}
 				else
 				{
-					newRest.add(x);
+					newRest.add(r);
 				}
-			});
-			z.setRestaurants(newRest);
-		});
-		//user.setRestaurants(newRest);
-		//System.out.println("New Rest is ---- "+newRest);
-		//userRepo.save(user);
+			}
+			u.setRestaurants(newRest);
+		}
+		if(found==false)
+		{
+			throw new AdminServiceException("AdminService.RESTAURANT_NOT_FOUND");
+		}
+		restaurantRepo.deleteById(restaurantDto.getRestaurantId());
 		return environment.getProperty("AdminService.RESTAURANT_DELETED_SUCCESS");
 	}
 	
