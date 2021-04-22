@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.project.exception.InvalidCredentialsException;
 import com.project.exception.UserServiceException;
 import com.project.model.LoginCredentialsDto;
+import com.project.model.SuccessMessage;
 import com.project.model.UsersDto;
 import com.project.service.UserServiceImpl;
 
@@ -40,10 +41,11 @@ public class UserApi {
 	}
 	
 	@PostMapping(value="/login")
-	public ResponseEntity<String> userLogin(@Valid @RequestBody LoginCredentialsDto login) throws NoSuchAlgorithmException, InvalidCredentialsException
+	public ResponseEntity<SuccessMessage> userLogin(@Valid @RequestBody LoginCredentialsDto login) throws NoSuchAlgorithmException, InvalidCredentialsException
 	{
 		String success = userService.userLogin(login);
-		System.out.println("succes msg: "+success);
-		return new ResponseEntity<String>(success,HttpStatus.OK);
+		SuccessMessage s = new SuccessMessage();
+		s.setMessage(success);
+		return new ResponseEntity<SuccessMessage>(s,HttpStatus.OK);
 	}
 }

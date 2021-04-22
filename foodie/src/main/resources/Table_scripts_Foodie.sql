@@ -299,5 +299,6 @@ alter table TABLE_BOOKING rename to table_booking;
 ---update restaurant set approval_status="Pending" where restaurant_id=1;
 
 ---deleted user_likes and dish_rationgs,wallet for delete low rationg rests
+---delete from wallet
 alter table orders add column restaurant_id integer;
 
