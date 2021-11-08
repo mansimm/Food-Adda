@@ -18,6 +18,7 @@ import com.project.exception.InvalidCredentialsException;
 import com.project.exception.UserServiceException;
 import com.project.model.LoginCredentialsDto;
 import com.project.model.Role;
+import com.project.model.RolesDto;
 import com.project.model.UsersDto;
 import com.project.repository.UserRepo;
 import com.project.utility.HashingUtility;
@@ -136,16 +137,28 @@ public class UserServiceImpl implements UserService{
 		return environment.getProperty("UserService.USER_REGISTER_SUCCESS");
 	}
 	
-	public String userLogin(LoginCredentialsDto login) throws InvalidCredentialsException, NoSuchAlgorithmException
+	public UsersDto userLogin(LoginCredentialsDto login) throws InvalidCredentialsException, NoSuchAlgorithmException
 	{
 		Optional<Users> op = userRepo.findByContactNumber(login.getContactNumber());
 		if(op.isPresent())
 		{
 			Users user = op.get();
-			if(user.getPassword().equals(hashingUtility.getHashValue(login.getPassword())))
+			Role role = login.getRole();
+			boolean match = false;
+			for(Roles r : user.getRoles())
 			{
+				if(r.getRoleType().toString().equals(role.toString()))
+				{
+					match = true;
+					break;
+				}
+			}
+			if(match && user.getPassword().equals(hashingUtility.getHashValue(login.getPassword())))
+			{
+				
 				System.out.println("Suucess in service - "+environment.getProperty("UserService.USER_LOGIN_SUCCESS"));
-				return environment.getProperty("UserService.USER_LOGIN_SUCCESS");
+				//return environment.getProperty("UserService.USER_LOGIN_SUCCESS");
+				return entityToDto(user);
 			}
 			else
 			{
@@ -156,6 +169,22 @@ public class UserServiceImpl implements UserService{
 		{
 			throw new InvalidCredentialsException("UserService.INVALID_CREDENTIALS");
 		}
+	}
+	public UsersDto entityToDto(Users user)
+	{
+		UsersDto u = new UsersDto();
+		u.setContactNumber(user.getContactNumber());
+		u.setPassword(user.getPassword());
+		List<RolesDto> rolesList = new ArrayList();
+		for(Roles r: user.getRoles())
+		{
+			RolesDto temp = new RolesDto();
+			temp.setRoleId(r.getRoleId());
+			temp.setRoleType(r.getRoleType());
+			rolesList.add(temp);
+		}
+		u.setRoles(rolesList);
+		return u;
 	}
 
 }

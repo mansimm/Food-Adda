@@ -10,5 +10,5 @@ import com.project.model.UsersDto;
 public interface UserService {
 
 	public String registerUser(UsersDto user) throws UserServiceException, NoSuchAlgorithmException;
-	public String userLogin(LoginCredentialsDto login) throws InvalidCredentialsException, NoSuchAlgorithmException;
+	public UsersDto userLogin(LoginCredentialsDto login) throws InvalidCredentialsException, NoSuchAlgorithmException;
 }

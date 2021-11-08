@@ -34,18 +34,20 @@ public class UserApi {
 	UserServiceImpl userService;
 	
 	@PostMapping(value="/register")
-	public ResponseEntity<String> registerUser(@Valid @RequestBody UsersDto user) throws UserServiceException, NoSuchAlgorithmException
+	public ResponseEntity<SuccessMessage> registerUser(@Valid @RequestBody UsersDto user) throws UserServiceException, NoSuchAlgorithmException
 	{
 		String success = userService.registerUser(user);
-		return new ResponseEntity<String>(success,HttpStatus.OK);
-	}
-	
-	@PostMapping(value="/login")
-	public ResponseEntity<SuccessMessage> userLogin(@Valid @RequestBody LoginCredentialsDto login) throws NoSuchAlgorithmException, InvalidCredentialsException
-	{
-		String success = userService.userLogin(login);
 		SuccessMessage s = new SuccessMessage();
 		s.setMessage(success);
 		return new ResponseEntity<SuccessMessage>(s,HttpStatus.OK);
+	}
+	
+	@PostMapping(value="/login")
+	public ResponseEntity<UsersDto> userLogin(@Valid @RequestBody LoginCredentialsDto login) throws NoSuchAlgorithmException, InvalidCredentialsException
+	{
+		UsersDto loggedinUser = userService.userLogin(login);
+		//SuccessMessage s = new SuccessMessage();
+		//s.setMessage(success);
+		return new ResponseEntity(loggedinUser,HttpStatus.OK);
 	}
 }

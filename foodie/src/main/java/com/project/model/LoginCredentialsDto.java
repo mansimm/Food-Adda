@@ -12,6 +12,17 @@ public class LoginCredentialsDto {
 	@NotNull(message="{UserValidator.INVALID_PASSWORD_NULL}")
 	@Pattern(regexp="(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{7,20}",message="{UserValidator.INVALID_PASSWORD_FORMAT}")
 	private String password;
+	
+	@NotNull(message="{UserValidator.INVALID_ROLE_NULL}")
+	private Role role;
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
 
 	public String getContactNumber() {
 		return contactNumber;
