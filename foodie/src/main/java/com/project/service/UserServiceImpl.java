@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService{
 			if(match && user.getPassword().equals(hashingUtility.getHashValue(login.getPassword())))
 			{
 				
-				System.out.println("Suucess in service - "+environment.getProperty("UserService.USER_LOGIN_SUCCESS"));
+				//System.out.println("Suucess in service - "+environment.getProperty("UserService.USER_LOGIN_SUCCESS"));
 				//return environment.getProperty("UserService.USER_LOGIN_SUCCESS");
 				return entityToDto(user);
 			}

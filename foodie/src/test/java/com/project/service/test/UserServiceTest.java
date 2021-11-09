@@ -16,13 +16,16 @@ import java.util.Optional;
 
 import com.project.entity.Roles;
 import com.project.entity.Users;
+import com.project.exception.InvalidCredentialsException;
 import com.project.exception.UserServiceException;
+import com.project.model.LoginCredentialsDto;
 import com.project.model.Role;
 import com.project.model.RolesDto;
 import com.project.model.UserAddressDto;
 import com.project.model.UsersDto;
 import com.project.repository.UserRepo;
 import com.project.service.UserServiceImpl;
+import com.project.utility.HashingUtility;
 
 @SpringBootTest
 public class UserServiceTest {
@@ -33,6 +36,9 @@ public class UserServiceTest {
 	@InjectMocks
 	UserServiceImpl userService = new UserServiceImpl();
 	
+	LoginCredentialsDto login;
+	Users userEntity;
+	UsersDto user;
 
 	@Test
 	public void registerUserExceptionTest() {
@@ -143,6 +149,51 @@ public class UserServiceTest {
 		String success = userService.registerUser(user);
 		Assertions.assertEquals(environment.getProperty("UserService.USER_REGISTER_SUCCESS"), success);
 
+	}
+	
+	@Test
+	public void userLoginSuccessTest() throws NoSuchAlgorithmException, InvalidCredentialsException
+	{
+		init();
+		Mockito.when(userRepo.findByContactNumber(login.getContactNumber())).thenReturn(Optional.of(userEntity));
+		
+		UsersDto ans = userService.userLogin(login);
+		System.out.println("\n	login.getPassword()="+login.getPassword()+"\n ans.getPassword()="+ans.getPassword());
+		Assertions.assertEquals(HashingUtility.getHashValue(login.getPassword()), ans.getPassword());
+	}
+	
+	public void init() throws NoSuchAlgorithmException
+	{
+		login = new LoginCredentialsDto();
+		login.setContactNumber("1234567890");
+		login.setPassword("passD123word!");
+		login.setRole(Role.CUSTOMER);
+		
+		// to pass argument to register user method
+				user = new UsersDto();
+				user.setContactNumber("1234567890");
+				user.setEmailId("micky@gmail.com");
+				user.setUserName("micky");
+				user.setPassword("passD123word!");
+				List<RolesDto> roles = new ArrayList<RolesDto>();
+				RolesDto role = new RolesDto();
+				role.setRoleType(Role.CUSTOMER);
+				roles.add(role);
+				user.setRoles(roles);
+
+				// to return as entity
+				userEntity = new Users();
+				userEntity.setContactNumber("1234567890");
+				userEntity.setEmailId("micky@gmail.com");
+				userEntity.setUserName("micky");
+				userEntity.setPassword(HashingUtility.getHashValue("passD123word!"));
+				List<Roles> rolesEntity = new ArrayList<Roles>();
+				Roles roleEntity = new Roles();
+				roleEntity.setRoleType(Role.CUSTOMER);
+				roleEntity.setRoleId(1);
+
+				rolesEntity.add(roleEntity);
+				userEntity.setRoles(rolesEntity);
 	}
 
 }
