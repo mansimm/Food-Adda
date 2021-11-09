@@ -158,10 +158,51 @@ public class UserServiceTest {
 		Mockito.when(userRepo.findByContactNumber(login.getContactNumber())).thenReturn(Optional.of(userEntity));
 		
 		UsersDto ans = userService.userLogin(login);
-		System.out.println("\n	login.getPassword()="+login.getPassword()+"\n ans.getPassword()="+ans.getPassword());
+		//System.out.println("\n	login.getPassword()="+login.getPassword()+"\n ans.getPassword()="+ans.getPassword());
 		Assertions.assertEquals(HashingUtility.getHashValue(login.getPassword()), ans.getPassword());
 	}
-	
+	//Test for user not present in database
+	@Test
+	public void userLoginExceptionTest1() throws NoSuchAlgorithmException, InvalidCredentialsException
+	{
+		init();
+		Mockito.when(userRepo.findByContactNumber(login.getContactNumber())).thenReturn(Optional.ofNullable(null));
+		
+		Exception e = Assertions.assertThrows(InvalidCredentialsException.class, ()->userService.userLogin(login));
+		//System.out.println("	environment.getProperty(\"UserService.INVALID_CREDENTIALS\")="+environment.getProperty("UserService.INVALID_CREDENTIALS"));
+		//System.out.println("	e.getMessage()="+e.getMessage());
+		Assertions.assertEquals("UserService.INVALID_CREDENTIALS", e.getMessage());
+	}
+	//test for different password
+	@Test
+	public void userLoginExceptionTest2() throws NoSuchAlgorithmException, InvalidCredentialsException
+	{
+		init();
+		userEntity.setPassword("SomethingElse11!");
+		Mockito.when(userRepo.findByContactNumber(login.getContactNumber())).thenReturn(Optional.of(userEntity));
+		
+		Exception e = Assertions.assertThrows(InvalidCredentialsException.class, ()->userService.userLogin(login));
+		//System.out.println("	environment.getProperty(\"UserService.INVALID_CREDENTIALS\")="+environment.getProperty("UserService.INVALID_CREDENTIALS"));
+		//System.out.println("	e.getMessage()="+e.getMessage());
+		Assertions.assertEquals("UserService.INVALID_CREDENTIALS", e.getMessage());
+	}
+	//Test for different roles
+	@Test
+	public void userLoginExceptionTest3() throws NoSuchAlgorithmException, InvalidCredentialsException
+	{
+		init();
+		List<Roles> rolesEntity = new ArrayList<Roles>();
+		Roles roleEntity = new Roles();
+		roleEntity.setRoleType(Role.CUSTOMER);
+		roleEntity.setRoleId(1);
+		userEntity.setRoles(rolesEntity);
+		Mockito.when(userRepo.findByContactNumber(login.getContactNumber())).thenReturn(Optional.of(userEntity));
+		
+		Exception e = Assertions.assertThrows(InvalidCredentialsException.class, ()->userService.userLogin(login));
+		//System.out.println("	environment.getProperty(\"UserService.INVALID_CREDENTIALS\")="+environment.getProperty("UserService.INVALID_CREDENTIALS"));
+		//System.out.println("	e.getMessage()="+e.getMessage());
+		Assertions.assertEquals("UserService.INVALID_CREDENTIALS", e.getMessage());
+	}
 	public void init() throws NoSuchAlgorithmException
 	{
 		login = new LoginCredentialsDto();
