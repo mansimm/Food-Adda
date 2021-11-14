@@ -160,6 +160,10 @@ public class UserServiceImpl implements UserService{
 				//return environment.getProperty("UserService.USER_LOGIN_SUCCESS");
 				return entityToDto(user);
 			}
+			else if(match == false)
+			{
+				throw new InvalidCredentialsException("UserService.INVALID_ROLE");
+			}
 			else
 			{
 				throw new InvalidCredentialsException("UserService.INVALID_CREDENTIALS");
