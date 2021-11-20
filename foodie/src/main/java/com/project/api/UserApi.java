@@ -36,6 +36,7 @@ public class UserApi {
 	@PostMapping(value="/register")
 	public ResponseEntity<SuccessMessage> registerUser(@Valid @RequestBody UsersDto user) throws UserServiceException, NoSuchAlgorithmException
 	{
+		System.out.println(user);
 		String success = userService.registerUser(user);
 		SuccessMessage s = new SuccessMessage();
 		s.setMessage(success);

@@ -19,6 +19,7 @@ import com.project.exception.UserServiceException;
 import com.project.model.LoginCredentialsDto;
 import com.project.model.Role;
 import com.project.model.RolesDto;
+import com.project.model.UserRegisterDto;
 import com.project.model.UsersDto;
 import com.project.repository.UserRepo;
 import com.project.utility.HashingUtility;
@@ -189,6 +190,114 @@ public class UserServiceImpl implements UserService{
 		}
 		u.setRoles(rolesList);
 		return u;
+	}
+
+	@Override
+	public String registerUser(UserRegisterDto userReg) throws UserServiceException, NoSuchAlgorithmException {
+		// TODO Auto-generated method stub
+		
+		Optional<Users> op = userRepo.findByContactNumber(userReg.getContactNumber());
+		if(op.isPresent())
+		{
+			//if user already present
+			Users userPresent = op.get();
+			for(Roles role: userPresent.getRoles())
+			{
+				if(userReg.getRole().equals(role.getRoleType()))
+				{
+					throw new UserServiceException("UserService.USER_ALREADY_EXISTS");
+				}				
+			}
+		
+			//add new role into already present customer
+			if(userPresent.getRoles()!=null)
+			{
+				Roles r = new Roles();
+				r.setRoleType(userReg.getRole());
+				userPresent.getRoles().add(r);
+			}
+			//will add address from profile not from register
+//			if(userReg.getRole().equals(Role.CUSTOMER))
+//			{
+//				//redirect to add address
+//				UserAddress address = new UserAddress();
+//				if(user.getAddressList()!=null)
+//				{
+//					System.out.println(user.getAddressList().get(0).getAddressLine1());
+//					address.setAddressLine1(user.getAddressList().get(0).getAddressLine1());
+//					address.setAddressLine2(user.getAddressList().get(0).getAddressLine2());
+//					address.setArea(user.getAddressList().get(0).getArea());
+//					address.setCity(user.getAddressList().get(0).getCity());
+//					address.setPincode(user.getAddressList().get(0).getPincode());
+//					address.setUserAddressName(user.getAddressList().get(0).getUserAddressName());
+//					address.setUserState(user.getAddressList().get(0).getUserState());
+//					
+//				}
+//				if(userPresent.getAddressList()==null)
+//				{
+//					List<UserAddress> newadd = new ArrayList<UserAddress>();
+//					newadd.add(address);
+//					userPresent.setAddressList(newadd);
+//				}
+//				else
+//				{
+//					userPresent.getAddressList().add(address);
+//				}
+//
+//			}
+//			else if(user.getRoles().get(0).getRoleType().equals(Role.VENDOR))
+//			{
+//				//can register directly
+//			}
+		}
+		else
+		{
+			//register new user
+			Users newUser = new Users();
+			newUser.setUserName(userReg.getUserName());
+			newUser.setEmailId(userReg.getEmailId());
+			newUser.setContactNumber(userReg.getContactNumber());
+			newUser.setPassword(hashingUtility.getHashValue(userReg.getPassword()));
+			
+			if(userReg.getRole() != null)
+			{
+				Roles role = new Roles();
+				role.setRoleType(userReg.getRole());
+				List<Roles> roles = new ArrayList<Roles>();
+				roles.add(role);
+				newUser.setRoles(roles);
+			}
+
+			// will do in profile to add address
+//			if(userReg.getRole().equals(Role.CUSTOMER))
+//			{
+//
+//				//redirect to add address
+//				UserAddress address = new UserAddress();
+//				if(user.getAddressList()!=null)
+//				{
+//					address.setAddressLine1(user.getAddressList().get(0).getAddressLine1());
+//					address.setAddressLine2(user.getAddressList().get(0).getAddressLine2());
+//					address.setArea(user.getAddressList().get(0).getArea());
+//					address.setCity(user.getAddressList().get(0).getCity());
+//					address.setPincode(user.getAddressList().get(0).getPincode());
+//					address.setUserAddressName(user.getAddressList().get(0).getUserAddressName());
+//					address.setUserState(user.getAddressList().get(0).getUserState());
+//					
+//				}
+//				List<UserAddress> newadd = new ArrayList<UserAddress>();
+//				newadd.add(address);
+//				newUser.setAddressList(newadd);
+//
+//			}
+//			else if(user.getRoles().get(0).getRoleType().equals(Role.VENDOR))
+//			{
+//				//can register directly
+//			}
+			userRepo.save(newUser);
+		}
+		return environment.getProperty("UserService.USER_REGISTER_SUCCESS");
+	
 	}
 
 }

@@ -14,7 +14,7 @@ public class UsersDto {
 	private Integer userId;
 	
 	@NotNull(message="{UserValidator.INVALID_USERNAME_NULL}")
-	@Pattern(regexp="[A-Za-z]+( [A-Za-z]+)*",message="{UserValidator.INVALID_USERNAME_FORMAT}")
+	@Pattern(regexp="[A-Za-z]{5,12}",message="{UserValidator.INVALID_USERNAME_FORMAT}")
 	private String userName;
 	
 	@NotNull(message="{UserValidator.INVALID_CONTACT_NUMBER_NULL}")
@@ -107,6 +107,13 @@ public class UsersDto {
 	}
 	public void setOrdersList(List<OrdersDto> ordersList) {
 		this.ordersList = ordersList;
+	}
+	@Override
+	public String toString() {
+		return "UsersDto [userId=" + userId + ", userName=" + userName + ", contactNumber=" + contactNumber
+				+ ", emailId=" + emailId + ", password=" + password + ", roles=" + roles + ", restaurants="
+				+ restaurants + ", addressList=" + addressList + ", wallet=" + wallet + ", userLikesList="
+				+ userLikesList + ", ordersList=" + ordersList + "]";
 	}
 	
 }
