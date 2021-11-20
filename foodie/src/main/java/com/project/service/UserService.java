@@ -12,5 +12,5 @@ public interface UserService {
 
 	public String registerUser(UsersDto user) throws UserServiceException, NoSuchAlgorithmException;
 	public UsersDto userLogin(LoginCredentialsDto login) throws InvalidCredentialsException, NoSuchAlgorithmException;
-	String registerUser(UserRegisterDto user) throws UserServiceException, NoSuchAlgorithmException;//new method
+	public String registerUser(UserRegisterDto user) throws UserServiceException, NoSuchAlgorithmException;//new method
 }

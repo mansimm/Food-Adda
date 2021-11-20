@@ -21,6 +21,7 @@ import com.project.model.LoginCredentialsDto;
 import com.project.model.SuccessMessage;
 import com.project.model.UsersDto;
 import com.project.service.UserServiceImpl;
+import com.project.model.UserRegisterDto;
 
 @CrossOrigin
 @RestController
@@ -38,6 +39,16 @@ public class UserApi {
 	{
 		System.out.println(user);
 		String success = userService.registerUser(user);
+		SuccessMessage s = new SuccessMessage();
+		s.setMessage(success);
+		return new ResponseEntity<SuccessMessage>(s,HttpStatus.OK);
+	}
+	
+	@PostMapping(value="/userRegister")
+	public ResponseEntity<SuccessMessage> newRegisterUser(@Valid @RequestBody UserRegisterDto userReg) throws UserServiceException, NoSuchAlgorithmException
+	{
+		System.out.println(userReg);
+		String success = userService.registerUser(userReg);
 		SuccessMessage s = new SuccessMessage();
 		s.setMessage(success);
 		return new ResponseEntity<SuccessMessage>(s,HttpStatus.OK);
